@@ -28,10 +28,15 @@ class PreferencesManager(context: Context) {
     }
 
     fun getNowBalance(): Float {
-        return sharedPreferences.getFloat(BALANCE_NOW_KEY, 0.0f)
+        return sharedPreferences.getFloat(BALANCE_NOW_KEY, 0f)
     }
 
-    fun updateNowBalanceForStore(newBalance: Float): Boolean {
+    fun getAllTimeBalance(): Float{
+        return sharedPreferences.getFloat(BALANCE_ALLTIME_KEY, 0f)
+    }
+
+    fun updateNowBalanceForStore(minus: Float): Boolean {
+        val newBalance = getNowBalance() - minus
         if (newBalance >= 0) {
             sharedPreferences.edit().putFloat(BALANCE_NOW_KEY, newBalance).apply()
             return true
@@ -39,8 +44,14 @@ class PreferencesManager(context: Context) {
         return false
     }
 
-    fun updateNowBalanceForTasks(newBalance: Float) {
+    fun updateNowBalanceForTasks(plus: Float) {
+        val newBalance = getNowBalance() + plus
         sharedPreferences.edit().putFloat(BALANCE_NOW_KEY, newBalance).apply()
+        updateAllTimeBalance(plus)
+    }
+
+    private fun updateAllTimeBalance(plus: Float){
+        sharedPreferences.edit().putFloat(BALANCE_ALLTIME_KEY, getAllTimeBalance() + plus)
     }
 
     companion object{

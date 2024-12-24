@@ -12,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Visibility
 import com.example.newappmotiv.databinding.FragmentTasksBinding
@@ -49,10 +51,28 @@ class TasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //val viewModel = ViewModelProvider(this).get(TasksViewModel::class.java)
+
         preferencesManager = PreferencesManager(requireContext())
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        /*viewModel.loadTasks()
+
+        viewModel.tasks.observe(viewLifecycleOwner){ tasks ->
+            val adapter = MyAdapter(tasks,
+                { t ->
+                    //выполняется при нажатии "начать"
+                    clickStart(t)
+                },
+                { t ->
+                    // выполняется при нажатии галочки
+                    installBalance(t)
+                })
+            recyclerView.adapter = adapter
+        }*/
 
         //получаем данные с бд dayTask и выводим в списке
         CoroutineScope(Dispatchers.IO).launch {
@@ -62,19 +82,7 @@ class TasksFragment : Fragment() {
                 val adapter = MyAdapter(ts,
                     { t ->
                         //выполняется при нажатии "начать"
-                        CoroutineScope(Dispatchers.IO).launch {
-                            database.getDaoTasks().updateTaskInProcess(t.id, true)
-                        }
-                        val durationInMinutes = t.timeValue
-                        val durationInMillis = durationInMinutes * 60
-
-                        // Создаем Intent для запуска системного таймера
-                        val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
-                            putExtra(AlarmClock.EXTRA_LENGTH, durationInMillis)
-                            putExtra(AlarmClock.EXTRA_MESSAGE, "Таймер для задачи: ${t.name}")
-                            putExtra(AlarmClock.EXTRA_SKIP_UI, true) // Пропустить UI
-                        }
-                        startActivity(intent)
+                        clickStart(t)
                     },
                     { t ->
                     // выполняется при нажатии галочки
@@ -121,6 +129,22 @@ class TasksFragment : Fragment() {
         Toast.makeText(requireContext(), messages[Random.nextInt(1,4)] + " + ${num} баллов!"
             ,Toast.LENGTH_SHORT)
             .show()
+    }
+
+    fun clickStart(t: DayTask){
+        CoroutineScope(Dispatchers.IO).launch {
+            database.getDaoTasks().updateTaskInProcess(t.id, true)
+        }
+        val durationInMinutes = t.timeValue
+        val durationInMillis = durationInMinutes * 60
+
+        // Создаем Intent для запуска системного таймера
+        val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
+            putExtra(AlarmClock.EXTRA_LENGTH, durationInMillis)
+            putExtra(AlarmClock.EXTRA_MESSAGE, "Таймер для задачи: ${t.name}")
+            putExtra(AlarmClock.EXTRA_SKIP_UI, true) // Пропустить UI
+        }
+        startActivity(intent)
     }
 
 

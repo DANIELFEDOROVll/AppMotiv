@@ -10,6 +10,7 @@ import com.example.newappmotiv.R
 import com.example.newappmotiv.databinding.ActivityAddDayTasksBinding
 import com.example.newappmotiv.model.MyApplication
 import com.example.newappmotiv.model.recyclerView.AdapterForAddDayTasks
+import com.example.newappmotiv.model.recyclerView.One
 import com.example.newappmotiv.model.room.DayTask
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,10 +40,16 @@ class AddDayTasksActivity : AppCompatActivity() {
             }
         }
 
+        binding.buttonAddDaytask.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+            database.getDaoTasks().insertListDayTasks(One.listOfTasks.toList())
+        }
+
         binding.buttonDeleteAllTasks.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 database.getDaoTasks().deleteAllTasks()
             }
         }
     }
+}
 }

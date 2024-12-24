@@ -64,8 +64,7 @@ class StoreFragment : Fragment() {
     }
 
     private fun boughtItem(item: StoresItem): Boolean{
-        val ready = preferencesManager.updateNowBalanceForStore(preferencesManager.getNowBalance()
-                - item.price)
+        val ready = preferencesManager.updateNowBalanceForStore(item.price)
         if(!ready) {
             Toast.makeText(requireContext(), "Не хватает средств!", Toast.LENGTH_SHORT)
                 .show()

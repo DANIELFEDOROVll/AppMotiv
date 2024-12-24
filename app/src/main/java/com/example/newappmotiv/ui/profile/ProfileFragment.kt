@@ -27,6 +27,8 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         preferencesManager = PreferencesManager(requireContext())
 
+        binding.totalBalanceTextView.text = "Заработанно за все время: " + preferencesManager.getAllTimeBalance().toString()
+
         binding.balanceTextView.text = "Балланс: ${preferencesManager.getNowBalance()}"
 
         binding.button1.setOnClickListener{

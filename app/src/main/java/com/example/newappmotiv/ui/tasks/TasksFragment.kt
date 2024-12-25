@@ -19,6 +19,7 @@ import androidx.transition.Visibility
 import com.example.newappmotiv.databinding.FragmentTasksBinding
 import com.example.newappmotiv.model.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapter
+import com.example.newappmotiv.model.recyclerView.One
 import com.example.newappmotiv.model.recyclerView.TaskForRecycler
 import com.example.newappmotiv.model.room.DayTask
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
@@ -29,8 +30,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
-// сделать анимацию добавления баллов и добавить таймер к задачам и покупкам если это необходимо
-// сделать корзину в store, где можно активировать таймер покупки
 
 class TasksFragment : Fragment() {
     private lateinit var binding: FragmentTasksBinding
@@ -45,6 +44,8 @@ class TasksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        One.listOfTasks.clear()
+
         binding = FragmentTasksBinding.inflate(inflater, container, false)
         return binding.root
     }

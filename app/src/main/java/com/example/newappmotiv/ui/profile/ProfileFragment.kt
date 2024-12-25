@@ -31,6 +31,8 @@ class ProfileFragment : Fragment() {
 
         binding.balanceTextView.text = "Балланс: ${preferencesManager.getNowBalance()}"
 
+        binding.totalSpentTextView.text =
+
         binding.button1.setOnClickListener{
             toAddGeneralTaskActivity()
         }

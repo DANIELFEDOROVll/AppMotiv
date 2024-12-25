@@ -8,6 +8,10 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.newappmotiv.R
 import com.example.newappmotiv.databinding.ActivityAllStatsBinding
 import com.example.newappmotiv.model.MyApplication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class AllStatsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAllStatsBinding
@@ -21,6 +25,10 @@ class AllStatsActivity : AppCompatActivity() {
         binding = ActivityAllStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // статистика проведенного времени и прочего
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+        }
     }
 }

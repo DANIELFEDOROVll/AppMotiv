@@ -24,15 +24,15 @@ class PreferencesManager(context: Context) {
     private fun initializeBalance() {
         sharedPreferences.edit().putFloat(BALANCE_NOW_KEY, 0.0f).apply()
         sharedPreferences.edit().putFloat(BALANCE_ALLTIME_KEY, 0.0f).apply()
-        sharedPreferences.edit().putFloat(COSTS_ALLTIME_KEY, 0.0f).apply()
+        sharedPreferences.edit().putFloat(SPENT_ALLTIME_KEY, 0.0f).apply()
     }
 
     fun getNowBalance(): Float {
-        return sharedPreferences.getFloat(BALANCE_NOW_KEY, 0f)
+        return sharedPreferences.getFloat(BALANCE_NOW_KEY, -1f)
     }
 
     fun getAllTimeBalance(): Float{
-        return sharedPreferences.getFloat(BALANCE_ALLTIME_KEY, 0f)
+        return sharedPreferences.getFloat(BALANCE_ALLTIME_KEY, -1f)
     }
 
     fun updateNowBalanceForStore(minus: Float): Boolean {
@@ -54,12 +54,21 @@ class PreferencesManager(context: Context) {
         sharedPreferences.edit().putFloat(BALANCE_ALLTIME_KEY, getAllTimeBalance() + plus)
     }
 
+    fun getSpentAllTime(): Float{
+        return sharedPreferences.getFloat(SPENT_ALLTIME_KEY, -1f)
+    }
+
+    fun updateSpentAllTime(plus: Float){
+        val newB = getSpentAllTime() + plus
+        sharedPreferences.edit().putFloat(SPENT_ALLTIME_KEY, newB)
+    }
+
     companion object{
         // ключи для sharedPreference
         const val SHARED_PREF_NAME_KEY = "shered_pref_one"
         const val BALANCE_NOW_KEY = "balance_now_key" //ключ текущего балланса
         const val BALANCE_ALLTIME_KEY = "ballance_all_time_key" //балланс за все время
-        const val COSTS_ALLTIME_KEY = "costs_all_time_key" //потрачено за все время
+        const val SPENT_ALLTIME_KEY = "costs_all_time_key" //потрачено за все время
         private val IS_FIRST_RUN_KEY = "is_first_run"
     }
 }

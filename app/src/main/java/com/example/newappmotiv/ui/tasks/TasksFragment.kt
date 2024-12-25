@@ -52,16 +52,12 @@ class TasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //val viewModel = ViewModelProvider(this).get(TasksViewModel::class.java)
-
         preferencesManager = PreferencesManager(requireContext())
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        /*viewModel.loadTasks()
-
-        viewModel.tasks.observe(viewLifecycleOwner){ tasks ->
+        
+        /*viewModel.tasks.observe(viewLifecycleOwner){ tasks ->
             val adapter = MyAdapter(tasks,
                 { t ->
                     //выполняется при нажатии "начать"
@@ -70,6 +66,7 @@ class TasksFragment : Fragment() {
                 { t ->
                     // выполняется при нажатии галочки
                     installBalance(t)
+
                 })
             recyclerView.adapter = adapter
         }*/
@@ -85,9 +82,9 @@ class TasksFragment : Fragment() {
                         clickStart(t)
                     },
                     { t ->
-                    // выполняется при нажатии галочки
-                    installBalance(t)
-                })
+                        // выполняется при нажатии галочки
+                        installBalance(t)
+                    })
                 recyclerView.adapter = adapter
             }
         }
@@ -105,16 +102,32 @@ class TasksFragment : Fragment() {
     private fun installBalance(t: DayTask){// меняет в сущности ready и считает баллы за задание
         CoroutineScope(Dispatchers.IO).launch {
             database.getDaoTasks().updateTaskReadyById(t.id, t.ready) //меняем ready в сущности
-            if(t.ready){ // прибавляем баллы при выполнении задания
+            if(t.ready){ // при выполнении задания
                 preferencesManager.updateNowBalanceForTasks(preferencesManager.getNowBalance() +
                         t.price)
                 withContext(Dispatchers.Main){
                     showToastReadyTask(t.price)
                 }
             }
-            if(!t.ready){
+            if(!t.ready){ // при отмене задания
                 preferencesManager.updateNowBalanceForTasks(preferencesManager.getNowBalance() -
                         t.price)
+            }
+            addMinutesInTotalSpentTime(t.name, t.timeValue, t.ready)
+        }
+    }
+
+    private fun addMinutesInTotalSpentTime(name: String, minutes: Int, ready: Boolean){
+        if(ready) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val spentTime = database.getDaoGeneralTasks().getTotalSpentTime(name)
+                database.getDaoGeneralTasks().updateTotalSpentMinutes(name, spentTime + minutes)
+            }
+        }
+        else{
+            CoroutineScope(Dispatchers.IO).launch {
+                val spentTime = database.getDaoGeneralTasks().getTotalSpentTime(name)
+                database.getDaoGeneralTasks().updateTotalSpentMinutes(name, spentTime - minutes)
             }
         }
     }
@@ -131,7 +144,7 @@ class TasksFragment : Fragment() {
             .show()
     }
 
-    fun clickStart(t: DayTask){
+    private fun clickStart(t: DayTask){
         CoroutineScope(Dispatchers.IO).launch {
             database.getDaoTasks().updateTaskInProcess(t.id, true)
         }

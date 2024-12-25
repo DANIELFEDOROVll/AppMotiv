@@ -12,4 +12,11 @@ interface DaoGeneralTask {
     @Query("SELECT * FROM generalTasks")
     suspend fun getGeneralTasks(): List<GeneralTasks>
 
+    @Query("SELECT totalSpentTimeInMinutes FROM generalTasks WHERE name = :taskName")
+    suspend fun getTotalSpentTime(taskName: String): Int
+
+    @Query("UPDATE generalTasks SET totalSpentTimeInMinutes = :newValue WHERE name = :taskName")
+    suspend fun updateTotalSpentMinutes(taskName: String, newValue: Int)
+
+
 }

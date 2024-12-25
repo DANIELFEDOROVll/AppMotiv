@@ -34,6 +34,10 @@ class ProfileFragment : Fragment() {
         binding.button1.setOnClickListener{
             toAddGeneralTaskActivity()
         }
+
+        binding.buttonAllStats.setOnClickListener {
+
+        }
     }
 
     fun toAddGeneralTaskActivity(){

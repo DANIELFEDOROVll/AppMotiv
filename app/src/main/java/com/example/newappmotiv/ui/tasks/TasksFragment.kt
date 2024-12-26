@@ -57,20 +57,6 @@ class TasksFragment : Fragment() {
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        
-        /*viewModel.tasks.observe(viewLifecycleOwner){ tasks ->
-            val adapter = MyAdapter(tasks,
-                { t ->
-                    //выполняется при нажатии "начать"
-                    clickStart(t)
-                },
-                { t ->
-                    // выполняется при нажатии галочки
-                    installBalance(t)
-
-                })
-            recyclerView.adapter = adapter
-        }*/
 
         //получаем данные с бд dayTask и выводим в списке
         CoroutineScope(Dispatchers.IO).launch {
@@ -104,15 +90,13 @@ class TasksFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             database.getDaoTasks().updateTaskReadyById(t.id, t.ready) //меняем ready в сущности
             if(t.ready){ // при выполнении задания
-                preferencesManager.updateNowBalanceForTasks(preferencesManager.getNowBalance() +
-                        t.price)
+                preferencesManager.updateNowBalanceForReadyTasks(t.price)
                 withContext(Dispatchers.Main){
                     showToastReadyTask(t.price)
                 }
             }
             if(!t.ready){ // при отмене задания
-                preferencesManager.updateNowBalanceForTasks(preferencesManager.getNowBalance() -
-                        t.price)
+                preferencesManager.updateNowBalanceForCancelTasks(t.price)
             }
             addMinutesInTotalSpentTime(t.name, t.timeValue, t.ready)
         }

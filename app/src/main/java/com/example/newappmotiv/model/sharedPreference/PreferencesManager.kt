@@ -28,14 +28,14 @@ class PreferencesManager(context: Context) {
     }
 
     fun getNowBalance(): Float {
-        return sharedPreferences.getFloat(BALANCE_NOW_KEY, -1f)
+        return sharedPreferences.getFloat(BALANCE_NOW_KEY, 0f)
     }
 
     fun getAllTimeBalance(): Float{
-        return sharedPreferences.getFloat(BALANCE_ALLTIME_KEY, -1f)
+        return sharedPreferences.getFloat(BALANCE_ALLTIME_KEY, 0f)
     }
 
-    fun updateNowBalanceForStore(minus: Float): Boolean {
+    fun updateNowBalanceForBuy(minus: Float): Boolean {
         val newBalance = getNowBalance() - minus
         if (newBalance >= 0) {
             sharedPreferences.edit().putFloat(BALANCE_NOW_KEY, newBalance).apply()
@@ -44,23 +44,34 @@ class PreferencesManager(context: Context) {
         return false
     }
 
-    fun updateNowBalanceForTasks(plus: Float) {
+    fun updateNowBalanceForCancel(plus: Float){
+        val newBalance = getNowBalance() + plus
+        sharedPreferences.edit().putFloat(BALANCE_NOW_KEY, newBalance).apply()
+    }
+
+    fun updateNowBalanceForReadyTasks(plus: Float) {
         val newBalance = getNowBalance() + plus
         sharedPreferences.edit().putFloat(BALANCE_NOW_KEY, newBalance).apply()
         updateAllTimeBalance(plus)
     }
 
+    fun updateNowBalanceForCancelTasks(plus: Float) {
+        val newBalance = getNowBalance() - plus
+        sharedPreferences.edit().putFloat(BALANCE_NOW_KEY, newBalance).apply()
+        updateAllTimeBalance(plus)
+    }
+
     private fun updateAllTimeBalance(plus: Float){
-        sharedPreferences.edit().putFloat(BALANCE_ALLTIME_KEY, getAllTimeBalance() + plus)
+        sharedPreferences.edit().putFloat(BALANCE_ALLTIME_KEY, getAllTimeBalance() + plus).apply()
     }
 
     fun getSpentAllTime(): Float{
-        return sharedPreferences.getFloat(SPENT_ALLTIME_KEY, -1f)
+        return sharedPreferences.getFloat(SPENT_ALLTIME_KEY, 0f)
     }
 
     fun updateSpentAllTime(plus: Float){
         val newB = getSpentAllTime() + plus
-        sharedPreferences.edit().putFloat(SPENT_ALLTIME_KEY, newB)
+        sharedPreferences.edit().putFloat(SPENT_ALLTIME_KEY, newB).apply()
     }
 
     companion object{

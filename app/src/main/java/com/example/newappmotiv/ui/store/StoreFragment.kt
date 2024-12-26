@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.FragmentStoreBinding
 import com.example.newappmotiv.model.MyApplication
@@ -18,7 +17,6 @@ import com.example.newappmotiv.model.sharedPreference.PreferencesManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class StoreFragment : Fragment() {
@@ -52,7 +50,7 @@ class StoreFragment : Fragment() {
                     actionTimerForStoreItem(item)
                     requestForChangeActivate(item)
             },{ item -> //при нажатии отмена
-                boughtItem(item)
+                cancelItem(item)
                 })
             recyclerView.adapter = adapter
         }
@@ -64,8 +62,8 @@ class StoreFragment : Fragment() {
     }
 
     private fun boughtItem(item: StoresItem): Boolean{
-        val ready = preferencesManager.updateNowBalanceForStore(item.price)
-        if(!ready) {
+        val work = preferencesManager.updateNowBalanceForBuy(item.price)
+        if(!work) {
             Toast.makeText(requireContext(), "Не хватает средств!", Toast.LENGTH_SHORT)
                 .show()
             return false
@@ -75,8 +73,17 @@ class StoreFragment : Fragment() {
                 database.getDaoStore().updateTaskReadyById(item.id, item.bought)
             }
             showToastBuyOrCancelItem(item.price, true)
+            preferencesManager.updateSpentAllTime(item.price)
             return true
         }
+    }
+
+    private fun cancelItem(item: StoresItem){
+        CoroutineScope(Dispatchers.IO).launch {
+            database.getDaoStore().updateTaskReadyById(item.id, item.bought)
+        }
+        preferencesManager.updateNowBalanceForCancel(item.price)
+        showToastBuyOrCancelItem(item.price, false)
     }
 
     private fun showToastBuyOrCancelItem(num: Float, buy: Boolean){

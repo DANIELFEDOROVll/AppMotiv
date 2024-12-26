@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.FragmentStoreBinding
-import com.example.newappmotiv.model.MyApplication
+import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapterForStore
 import com.example.newappmotiv.model.room.StoresItem
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager

@@ -3,7 +3,7 @@ package com.example.newappmotiv.ui.profile
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newappmotiv.databinding.ActivityAddGeneralTaskBinding
-import com.example.newappmotiv.model.MyApplication
+import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.room.AppDatabase
 import com.example.newappmotiv.model.room.GeneralTasks
 import kotlinx.coroutines.CoroutineScope

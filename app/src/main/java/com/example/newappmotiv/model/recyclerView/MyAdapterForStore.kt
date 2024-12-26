@@ -8,8 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newappmotiv.R
 import com.example.newappmotiv.model.room.StoresItem
-import com.example.newappmotiv.model.sharedPreference.PreferencesManager
-import com.example.newappmotiv.ui.MainActivity
 
 
 class MyAdapterForStore(private val tasksForRecycler: List<StoresItem>,
@@ -35,9 +33,11 @@ class MyAdapterForStore(private val tasksForRecycler: List<StoresItem>,
         val buttonAct = itemView.findViewById<Button>(R.id.buttonAct)
         val buttonCancel = itemView.findViewById<Button>(R.id.buttonCancel)
         val name: TextView = itemView.findViewById(R.id.textViewName)
+        val price = itemView.findViewById<TextView>(R.id.textViewPriceItem)
 
         fun bind(item: StoresItem) {
             name.text = item.name
+            price.text = item.price.toString()
             if(item.bought){
                 buttonAct.visibility = View.VISIBLE
                 buttonCancel.visibility = View.VISIBLE

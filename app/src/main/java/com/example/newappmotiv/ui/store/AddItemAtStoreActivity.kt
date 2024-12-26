@@ -1,14 +1,9 @@
 package com.example.newappmotiv.ui.store
 
-import android.app.Activity
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.newappmotiv.R
 import com.example.newappmotiv.databinding.ActivityAddItemAtStoreBinding
-import com.example.newappmotiv.model.MyApplication
+import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.room.StoresItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

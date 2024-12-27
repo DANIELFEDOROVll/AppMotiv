@@ -22,31 +22,8 @@
         android:layout_marginStart="16dp"
         android:text="Баланс: "
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/totalSpentTextView"
         app:layout_constraintStart_toEndOf="@+id/profileImageView"
         app:layout_constraintTop_toTopOf="@+id/profileImageView" />
-
-    <TextView
-        android:id="@+id/totalSpentTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Потрачено: "
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/totalBalanceTextView"
-        app:layout_constraintStart_toEndOf="@+id/profileImageView"
-        app:layout_constraintTop_toBottomOf="@+id/balanceTextView" />
-
-    <TextView
-        android:id="@+id/totalBalanceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Баланс общий: "
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/profileImageView"
-        app:layout_constraintStart_toEndOf="@+id/profileImageView"
-        app:layout_constraintTop_toBottomOf="@+id/totalSpentTextView" />
 
 
     <Button

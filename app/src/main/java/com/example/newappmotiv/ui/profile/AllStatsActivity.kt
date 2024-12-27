@@ -2,7 +2,9 @@ package com.example.newappmotiv.ui.profile
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.ActivityAllStatsBinding
+import com.example.newappmotiv.model.recyclerView.AdapterAllStats
 import com.example.newappmotiv.utils.MyApplication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,10 +22,14 @@ class AllStatsActivity : AppCompatActivity() {
         binding = ActivityAllStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        val recyclerView = binding.rcAllStats
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         CoroutineScope(Dispatchers.IO).launch {
+            val ts = database.getDaoGeneralTasks().getGeneralTasks()
 
+            val adapter = AdapterAllStats(ts)
+            recyclerView.adapter = adapter
         }
     }
 }

@@ -27,23 +27,24 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         preferencesManager = PreferencesManager(requireContext())
 
-        binding.totalBalanceTextView.text = "Заработанно за все время:  ${preferencesManager.getAllTimeBalance()}"
-
         binding.balanceTextView.text = "Текущий балланс: ${preferencesManager.getNowBalance()}"
-
-        binding.totalSpentTextView.text = "Потраченно за все время: ${preferencesManager.getSpentAllTime()}"
 
         binding.button1.setOnClickListener{
             toAddGeneralTaskActivity()
         }
 
         binding.buttonAllStats.setOnClickListener {
-
+            toAllStatsActivity()
         }
     }
 
-    fun toAddGeneralTaskActivity(){
+    private fun toAddGeneralTaskActivity(){
         val intent = Intent(requireContext(), AddGeneralTaskActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun toAllStatsActivity(){
+        val intent = Intent(requireContext(), AllStatsActivity::class.java)
         startActivity(intent)
     }
 }

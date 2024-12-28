@@ -40,8 +40,8 @@ android {
 }
 
 dependencies {
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7") // Проверьте актуальную версию
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7") // Проверьте актуальную версию
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx) 
 
     implementation("com.google.android.material:material:1.12.0")
 

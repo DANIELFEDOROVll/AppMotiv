@@ -9,8 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.FragmentTasksBinding
+import com.example.newappmotiv.model.dayTasksRepository
 import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapter
 import com.example.newappmotiv.model.recyclerView.One
@@ -44,6 +46,11 @@ class TasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val repository = dayTasksRepository(database.getDaoTasks())
+
+        val viewModel = ViewModelProvider(this,
+            TasksViewModelFactory(repository))[TasksViewModel::class.java]
 
         preferencesManager = PreferencesManager(requireContext())
 
@@ -140,5 +147,15 @@ class TasksFragment : Fragment() {
 
     companion object{
         const val MYLOG = "my_log_1"
+    }
+
+    class TasksViewModelFactory(private val repository: dayTasksRepository) : ViewModelProvider.Factory {
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return TasksViewModel(repository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }

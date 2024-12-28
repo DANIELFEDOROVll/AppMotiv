@@ -5,6 +5,6 @@ import com.example.newappmotiv.model.room.DaoTask
 import com.example.newappmotiv.model.room.DayTask
 
 class dayTasksRepository(private val daoTask: DaoTask) {
-    val dayTasks: LiveData<List<DayTask>> = daoTask.getDayTasks()
-    //---
+    suspend fun getDayTasks() = daoTask.getDayTasks()
+    suspend fun insertDayTask(dayTask: DayTask) = daoTask.insertDayTask(dayTask)
 }

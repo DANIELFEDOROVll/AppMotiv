@@ -21,7 +21,7 @@ class AdapterForAddDayTasks(private val generalTasks: List<GeneralTasks>): Recyc
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.startValues(generalTasks[position])
-        holder.bind()
+        holder.bind(generalTasks[position])
     }
 
     override fun getItemCount(): Int {
@@ -35,19 +35,19 @@ class AdapterForAddDayTasks(private val generalTasks: List<GeneralTasks>): Recyc
         val edTime = itemView.findViewById<EditText>(R.id.editTextTimeValue)
         val edCount = itemView.findViewById<EditText>(R.id.editTextCount)
 
-        fun bind() {
+        fun bind(generalTask: GeneralTasks) {
             checkbox.setOnCheckedChangeListener{_, isChecked ->
-                // доделать логику с выбором и добавлением задач
                 val price = edPrice.text.toString()
                 val time = edTime.text.toString()
                 val count = edCount.text.toString()
+                val name = generalTask.name
 
                 if(price != "" && time != "" && count != "") {
                     for (i in 0 until count.toInt()) {
                         One.listOfTasks.add(
                             DayTask(
                                 null,
-                                checkbox.text.toString(),
+                                name,
                                 price.toFloat(),
                                 false,
                                 time.toInt(),

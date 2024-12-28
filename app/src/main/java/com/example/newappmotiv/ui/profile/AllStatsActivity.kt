@@ -25,6 +25,8 @@ class AllStatsActivity : AppCompatActivity() {
         val recyclerView = binding.rcAllStats
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        binding.tvSpentTimeAllTasks.text = "Проведенное время за задачами: "
+
         CoroutineScope(Dispatchers.IO).launch {
             val ts = database.getDaoGeneralTasks().getGeneralTasks()
 

@@ -5,8 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "generalTasks")
 data class GeneralTasks(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
+    @PrimaryKey
     val name: String,
     val description: String,
     var totalSpentTimeInMinutes: Int

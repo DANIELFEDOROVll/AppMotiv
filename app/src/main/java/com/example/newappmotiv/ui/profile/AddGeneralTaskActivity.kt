@@ -23,7 +23,6 @@ class AddGeneralTaskActivity : AppCompatActivity() {
 
         binding.buttonAddGeneralTask.setOnClickListener {
             val task = GeneralTasks(
-                null,
                 binding.edName.text.toString(),
                 binding.edDescription.text.toString(),
                 0

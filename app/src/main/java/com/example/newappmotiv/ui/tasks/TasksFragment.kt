@@ -90,7 +90,7 @@ class TasksFragment : Fragment() {
             if(!t.ready){ // при отмене задания
                 preferencesManager.updateNowBalanceForCancelTasks(t.price)
             }
-            addMinutesInTotalSpentTime(t.name, t.timeValue, t.ready)
+            addMinutesInTotalSpentTime(t.generalTaskName, t.timeValue, t.ready)
         }
     }
 
@@ -131,7 +131,7 @@ class TasksFragment : Fragment() {
         // Создаем Intent для запуска системного таймера
         val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
             putExtra(AlarmClock.EXTRA_LENGTH, durationInMillis)
-            putExtra(AlarmClock.EXTRA_MESSAGE, "Таймер для задачи: ${t.name}")
+            putExtra(AlarmClock.EXTRA_MESSAGE, "Таймер для задачи: ${t.generalTaskName}")
             putExtra(AlarmClock.EXTRA_SKIP_UI, true) // Пропустить UI
         }
         startActivity(intent)

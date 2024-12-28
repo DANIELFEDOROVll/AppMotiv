@@ -40,7 +40,7 @@ class MyAdapter(private val tasksForRecycler: List<DayTask>,
         val startButton: Button = itemView.findViewById(R.id.buttonStartTask)
 
         fun bind(task: DayTask) {
-            name.text = task.name
+            name.text = task.generalTaskName
             price.text = task.price.toString()
             name.isChecked = task.ready
             timeValue.text = task.timeValue.toString() + " мин."

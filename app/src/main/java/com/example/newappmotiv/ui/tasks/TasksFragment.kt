@@ -32,7 +32,7 @@ class TasksFragment : Fragment() {
         (requireActivity().application as MyApplication).database
     }
 
-    private lateinit var preferencesManager: PreferencesManager
+    lateinit var preferencesManager: PreferencesManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,11 +48,10 @@ class TasksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val repository = dayTasksRepository(database.getDaoTasks())
+        preferencesManager = PreferencesManager(requireContext())
 
         val viewModel = ViewModelProvider(this,
-            TasksViewModelFactory(repository))[TasksViewModel::class.java]
-
-        preferencesManager = PreferencesManager(requireContext())
+            TasksViewModelFactory(repository, preferencesManager))[TasksViewModel::class.java]
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -64,15 +63,19 @@ class TasksFragment : Fragment() {
             withContext(Dispatchers.Main){
                 val adapter = MyAdapter(ts,
                     { t ->
-                        //выполняется при нажатии "начать"
+                        // выполняется при нажатии "начать"
                         clickStart(t)
                     },
                     { t ->
                         // выполняется при нажатии галочки
-                        installBalance(t)
+                        viewModel.installBalance(t)
                     })
                 recyclerView.adapter = adapter
             }
+        }
+
+        viewModel.toast_numer.observe(viewLifecycleOwner){ price ->
+            showToastReadyTask(price)
         }
 
         binding.addButton.setOnClickListener {
@@ -83,22 +86,6 @@ class TasksFragment : Fragment() {
     private fun toAddDayTaskActivity(){
         val intent = Intent(requireContext(), AddDayTasksActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun installBalance(t: DayTask){// меняет в сущности ready и считает баллы за задание
-        CoroutineScope(Dispatchers.IO).launch {
-            database.getDaoTasks().updateTaskReadyById(t.id, t.ready) //меняем ready в сущности
-            if(t.ready){ // при выполнении задания
-                preferencesManager.updateNowBalanceForReadyTasks(t.price)
-                withContext(Dispatchers.Main){
-                    showToastReadyTask(t.price)
-                }
-            }
-            if(!t.ready){ // при отмене задания
-                preferencesManager.updateNowBalanceForCancelTasks(t.price)
-            }
-            addMinutesInTotalSpentTime(t.generalTaskName, t.timeValue, t.ready)
-        }
     }
 
     private fun addMinutesInTotalSpentTime(name: String, minutes: Int, ready: Boolean){
@@ -149,11 +136,12 @@ class TasksFragment : Fragment() {
         const val MYLOG = "my_log_1"
     }
 
-    class TasksViewModelFactory(private val repository: dayTasksRepository) : ViewModelProvider.Factory {
+    class TasksViewModelFactory(private val repository: dayTasksRepository,
+        private val preferencesManager: PreferencesManager) : ViewModelProvider.Factory {
         override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return TasksViewModel(repository) as T
+                return TasksViewModel(repository, preferencesManager) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

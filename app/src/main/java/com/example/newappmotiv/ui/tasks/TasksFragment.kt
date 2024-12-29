@@ -11,8 +11,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.databinding.FragmentTasksBinding
-import com.example.newappmotiv.model.dayTasksRepository
+import com.example.newappmotiv.model.DayTasksRepository
 import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapter
 import com.example.newappmotiv.model.recyclerView.One
@@ -28,11 +29,13 @@ import kotlin.random.Random
 class TasksFragment : Fragment() {
     private lateinit var binding: FragmentTasksBinding
 
-    private val database by lazy {
+    val database by lazy {
         (requireActivity().application as MyApplication).database
     }
 
-    lateinit var preferencesManager: PreferencesManager
+    private lateinit var preferencesManager: PreferencesManager
+
+    lateinit var ts: List<DayTask>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,32 +50,34 @@ class TasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repository = dayTasksRepository(database.getDaoTasks())
+        val repositoryDayTask = DayTasksRepository(database.getDaoTasks())
+        val repositoryGeneralTask = GeneralTasksRepository(database.getDaoGeneralTasks())
+
         preferencesManager = PreferencesManager(requireContext())
 
         val viewModel = ViewModelProvider(this,
-            TasksViewModelFactory(repository, preferencesManager))[TasksViewModel::class.java]
+            TasksViewModelFactory(repositoryDayTask, repositoryGeneralTask,
+                preferencesManager))[TasksViewModel::class.java]
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        //получаем данные с бд dayTask и выводим в списке
         CoroutineScope(Dispatchers.IO).launch {
-            val ts = database.getDaoTasks().getDayTasks()
-
-            withContext(Dispatchers.Main){
-                val adapter = MyAdapter(ts,
-                    { t ->
-                        // выполняется при нажатии "начать"
-                        clickStart(t)
-                    },
-                    { t ->
-                        // выполняется при нажатии галочки
-                        viewModel.installBalance(t)
-                    })
-                recyclerView.adapter = adapter
-            }
+            ts = database.getDaoTasks().getDayTasks()
         }
+
+        val adapter = MyAdapter(
+            ts,
+            { t ->
+                // выполняется при нажатии "начать"
+                clickStart(t)
+            },
+            { t ->
+                // выполняется при нажатии галочки
+                viewModel.installBalance(t)
+            })
+
+
 
         viewModel.toast_numer.observe(viewLifecycleOwner){ price ->
             showToastReadyTask(price)
@@ -136,12 +141,15 @@ class TasksFragment : Fragment() {
         const val MYLOG = "my_log_1"
     }
 
-    class TasksViewModelFactory(private val repository: dayTasksRepository,
-        private val preferencesManager: PreferencesManager) : ViewModelProvider.Factory {
+    class TasksViewModelFactory(
+        private val repository: DayTasksRepository,
+        private val repositoryGeneralTask: GeneralTasksRepository,
+        private val preferencesManager: PreferencesManager
+    ) : ViewModelProvider.Factory {
         override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return TasksViewModel(repository, preferencesManager) as T
+                return TasksViewModel(repository, repositoryGeneralTask, preferencesManager) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

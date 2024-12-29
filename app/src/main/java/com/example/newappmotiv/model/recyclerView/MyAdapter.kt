@@ -1,5 +1,6 @@
 package com.example.newappmotiv.model.recyclerView
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.CountDownTimer
@@ -15,7 +16,7 @@ import com.example.newappmotiv.R
 import com.example.newappmotiv.model.room.DayTask
 
 
-class MyAdapter(private val tasksForRecycler: List<DayTask>,
+class MyAdapter(private var tasksForRecycler: List<DayTask>,
                 private val timerStart: (DayTask) -> Unit,
                 private val onTaskCheckedChangeListener: (DayTask) -> Unit) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
@@ -32,6 +33,11 @@ class MyAdapter(private val tasksForRecycler: List<DayTask>,
         return tasksForRecycler.size
     }
 
+    fun updateTasks(tasks: List<DayTask>){
+        tasksForRecycler = tasks
+        notifyDataSetChanged()
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textInProcess = itemView.findViewById<TextView>(R.id.textViewInProcess)
         val name: CheckBox = itemView.findViewById(R.id.checkBox)
@@ -39,7 +45,9 @@ class MyAdapter(private val tasksForRecycler: List<DayTask>,
         val timeValue = itemView.findViewById<TextView>(R.id.textTimeValue)
         val startButton: Button = itemView.findViewById(R.id.buttonStartTask)
 
+
         fun bind(task: DayTask) {
+
             name.text = task.generalTaskName
             price.text = task.price.toString()
             name.isChecked = task.ready

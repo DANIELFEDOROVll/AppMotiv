@@ -1,21 +1,20 @@
 package com.example.newappmotiv.ui.tasks
 
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newappmotiv.model.dayTasksRepository
+import com.example.newappmotiv.model.GeneralTasksRepository
+import com.example.newappmotiv.model.DayTasksRepository
 import com.example.newappmotiv.model.room.DayTask
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.random.Random
 
 class TasksViewModel(
-    private val repositoryDayTask: dayTasksRepository,
+    private val repositoryDayTask: DayTasksRepository,
+    private val repositoryGeneralTask: GeneralTasksRepository,
     private val preferencesManager: PreferencesManager
 ): ViewModel() {
 
@@ -31,9 +30,9 @@ class TasksViewModel(
         loadTasks()
     }
 
-    private fun loadTasks(){
+    fun loadTasks(){
         viewModelScope.launch {
-            repositoryDayTask.getDayTasks()
+            _tasks.value = repositoryDayTask.getDayTasks()
         }
     }
 
@@ -56,14 +55,14 @@ class TasksViewModel(
     fun addMinutesInTotalSpentTime(name: String, minutes: Int, ready: Boolean){
         if(ready) {
             viewModelScope.launch {
-                val spentTime = database.getDaoGeneralTasks().getTotalSpentTime(name)
-                database.getDaoGeneralTasks().updateTotalSpentMinutes(name, spentTime + minutes)
+                val spentTime = repositoryGeneralTask.getTotalSpentTimeOfTheTask(name)
+                repositoryGeneralTask.updateTotalSpentTimeOfTheTask(name, spentTime + minutes)
             }
         }
         else{
             viewModelScope.launch {
-                val spentTime = database.getDaoGeneralTasks().getTotalSpentTime(name)
-                database.getDaoGeneralTasks().updateTotalSpentMinutes(name, spentTime - minutes)
+                val spentTime = repositoryGeneralTask.getTotalSpentTimeOfTheTask(name)
+                repositoryGeneralTask.updateTotalSpentTimeOfTheTask(name, spentTime - minutes)
             }
         }
     }

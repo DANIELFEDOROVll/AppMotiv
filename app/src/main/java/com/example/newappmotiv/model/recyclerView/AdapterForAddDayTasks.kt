@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newappmotiv.R
 import com.example.newappmotiv.model.room.DayTask
 import com.example.newappmotiv.model.room.GeneralTasks
+import com.example.newappmotiv.ui.tasks.TasksViewModel
 
 
 class AdapterForAddDayTasks(private val generalTasks: List<GeneralTasks>): RecyclerView.Adapter<AdapterForAddDayTasks.ViewHolder>() {

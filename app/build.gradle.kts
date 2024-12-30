@@ -41,7 +41,8 @@ android {
 
 dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx) 
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     implementation("com.google.android.material:material:1.12.0")
 

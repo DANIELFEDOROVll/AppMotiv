@@ -49,10 +49,11 @@ class TasksViewModel(
                 preferencesManager.updateNowBalanceForCancelTasks(t.price)
             }
             addMinutesInTotalSpentTime(t.generalTaskName, t.timeValue, t.ready)
+            loadTasks()
         }
     }
 
-    fun addMinutesInTotalSpentTime(name: String, minutes: Int, ready: Boolean){
+    private fun addMinutesInTotalSpentTime(name: String, minutes: Int, ready: Boolean){
         if(ready) {
             viewModelScope.launch {
                 val spentTime = repositoryGeneralTask.getTotalSpentTimeOfTheTask(name)

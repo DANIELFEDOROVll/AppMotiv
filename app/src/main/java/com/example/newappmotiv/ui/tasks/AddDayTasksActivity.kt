@@ -58,11 +58,13 @@ class AddDayTasksActivity : AppCompatActivity() {
                 database.getDaoTasks().insertListDayTasks(One.listOfTasks.toList())
                 viewModel.loadTasks()
             }
+            finish()
+        }
 
-            binding.buttonDeleteAllTasks.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    database.getDaoTasks().deleteAllTasks()
-                }
+        binding.buttonDeleteAllTasks.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                database.getDaoTasks().deleteAllTasks()
+                viewModel.loadTasks()
             }
         }
     }

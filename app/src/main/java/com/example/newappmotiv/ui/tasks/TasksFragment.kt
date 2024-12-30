@@ -33,16 +33,16 @@ class TasksFragment : Fragment() {
         (requireActivity().application as MyApplication).database
     }
 
-    private lateinit var preferencesManager: PreferencesManager
+    private lateinit var viewModel: TasksViewModel
+    private lateinit var adapter: MyAdapter
 
-    lateinit var ts: List<DayTask>
+    private lateinit var preferencesManager: PreferencesManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         One.listOfTasks.clear()
-
         binding = FragmentTasksBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -55,32 +55,34 @@ class TasksFragment : Fragment() {
 
         preferencesManager = PreferencesManager(requireContext())
 
-        val viewModel = ViewModelProvider(this,
-            TasksViewModelFactory(repositoryDayTask, repositoryGeneralTask,
-                preferencesManager))[TasksViewModel::class.java]
+        viewModel = ViewModelProvider(this,
+            TasksViewModelFactory(
+                repositoryDayTask,
+                repositoryGeneralTask,
+                preferencesManager
+            )
+        )[TasksViewModel::class.java]
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        CoroutineScope(Dispatchers.IO).launch {
-            ts = database.getDaoTasks().getDayTasks()
-        }
-
-        val adapter = MyAdapter(
-            ts,
+        adapter = MyAdapter(
+            emptyList(),
             { t ->
                 // выполняется при нажатии "начать"
                 clickStart(t)
             },
-            { t ->
-                // выполняется при нажатии галочки
+            { t -> //выполняется при нажатии на галочку
                 viewModel.installBalance(t)
             })
+        recyclerView.adapter = adapter
 
+        viewModel.tasks.observe(viewLifecycleOwner){
+            adapter.updateTasks(it)
+        }
 
-
-        viewModel.toast_numer.observe(viewLifecycleOwner){ price ->
-            showToastReadyTask(price)
+        viewModel.toast_numer.observe(viewLifecycleOwner){
+            showToastReadyTask(it)
         }
 
         binding.addButton.setOnClickListener {
@@ -91,21 +93,6 @@ class TasksFragment : Fragment() {
     private fun toAddDayTaskActivity(){
         val intent = Intent(requireContext(), AddDayTasksActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun addMinutesInTotalSpentTime(name: String, minutes: Int, ready: Boolean){
-        if(ready) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val spentTime = database.getDaoGeneralTasks().getTotalSpentTime(name)
-                database.getDaoGeneralTasks().updateTotalSpentMinutes(name, spentTime + minutes)
-            }
-        }
-        else{
-            CoroutineScope(Dispatchers.IO).launch {
-                val spentTime = database.getDaoGeneralTasks().getTotalSpentTime(name)
-                database.getDaoGeneralTasks().updateTotalSpentMinutes(name, spentTime - minutes)
-            }
-        }
     }
 
     private fun showToastReadyTask(num: Float){
@@ -135,7 +122,6 @@ class TasksFragment : Fragment() {
         }
         startActivity(intent)
     }
-
 
     companion object{
         const val MYLOG = "my_log_1"

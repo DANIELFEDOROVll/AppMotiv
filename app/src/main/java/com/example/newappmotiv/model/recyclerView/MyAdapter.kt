@@ -39,11 +39,11 @@ class MyAdapter(private var tasksForRecycler: List<DayTask>,
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textInProcess = itemView.findViewById<TextView>(R.id.textViewInProcess)
-        val name: CheckBox = itemView.findViewById(R.id.checkBox)
+        private val textInProcess = itemView.findViewById<TextView>(R.id.textViewInProcess)
+        private val name: CheckBox = itemView.findViewById(R.id.checkBox)
         val price: TextView = itemView.findViewById(R.id.textPrice)
-        val timeValue = itemView.findViewById<TextView>(R.id.textTimeValue)
-        val startButton: Button = itemView.findViewById(R.id.buttonStartTask)
+        private val timeValue = itemView.findViewById<TextView>(R.id.textTimeValue)
+        private val startButton: Button = itemView.findViewById(R.id.buttonStartTask)
 
 
         fun bind(task: DayTask) {

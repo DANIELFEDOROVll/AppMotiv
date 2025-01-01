@@ -8,4 +8,5 @@ class DayTasksRepository(private val daoTask: DaoTask) {
     suspend fun insertDayTask(dayTask: DayTask) = daoTask.insertDayTask(dayTask)
     suspend fun updateTaskInProcess(id: Int?, newValue: Boolean) = daoTask.updateTaskInProcess(id, newValue)
     suspend fun updateTaskReady(id: Int?, newValue: Boolean) = daoTask.updateTaskReadyById(id, newValue)
+
 }

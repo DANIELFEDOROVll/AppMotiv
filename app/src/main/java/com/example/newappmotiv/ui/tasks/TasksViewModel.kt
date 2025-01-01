@@ -19,12 +19,10 @@ class TasksViewModel(
 ): ViewModel() {
 
     private val _tasks = MutableLiveData<List<DayTask>>()
-    val tasks: LiveData<List<DayTask>>
-        get() = _tasks
+    val tasks: LiveData<List<DayTask>> get() = _tasks
 
     private val _toast_number = MutableLiveData<Float>()
-    val toast_numer: LiveData<Float>
-        get() = _toast_number
+    val toast_numer: LiveData<Float> get() = _toast_number
 
     init {
         loadTasks()
@@ -32,7 +30,8 @@ class TasksViewModel(
 
     fun loadTasks(){
         viewModelScope.launch {
-            _tasks.value = repositoryDayTask.getDayTasks()
+            val newTasks = repositoryDayTask.getDayTasks()
+            _tasks.postValue(newTasks)
         }
     }
 

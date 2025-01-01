@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.model.GeneralTasksRepository
@@ -42,7 +43,6 @@ class TasksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        One.listOfTasks.clear()
         binding = FragmentTasksBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -55,7 +55,7 @@ class TasksFragment : Fragment() {
 
         preferencesManager = PreferencesManager(requireContext())
 
-        viewModel = ViewModelProvider(this,
+        viewModel = ViewModelProvider(requireActivity() as AddDayTasksActivity,
             TasksViewModelFactory(
                 repositoryDayTask,
                 repositoryGeneralTask,
@@ -77,9 +77,11 @@ class TasksFragment : Fragment() {
             })
         recyclerView.adapter = adapter
 
-        viewModel.tasks.observe(viewLifecycleOwner){
-            adapter.updateTasks(it)
-        }
+        viewModel.tasks.observe(viewLifecycleOwner, Observer { items ->
+            items?.let {
+                adapter.updateTasks(it)
+            }
+        })
 
         viewModel.toast_numer.observe(viewLifecycleOwner){
             showToastReadyTask(it)

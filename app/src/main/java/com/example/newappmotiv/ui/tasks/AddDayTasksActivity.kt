@@ -66,6 +66,21 @@ class AddDayTasksActivity : AppCompatActivity() {
                 database.getDaoTasks().deleteAllTasks()
                 viewModel.loadTasks()
             }
+            finish()
+        }
+    }
+
+    class TasksViewModelFactory(
+        private val repository: DayTasksRepository,
+        private val repositoryGeneralTask: GeneralTasksRepository,
+        private val preferencesManager: PreferencesManager
+    ) : ViewModelProvider.Factory {
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return TasksViewModel(repository, repositoryGeneralTask, preferencesManager) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }

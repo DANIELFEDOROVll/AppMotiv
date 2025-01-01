@@ -35,7 +35,7 @@ class MyAdapter(private var tasksForRecycler: List<DayTask>,
 
     fun updateTasks(tasks: List<DayTask>){
         tasksForRecycler = tasks
-        notifyDataSetChanged()
+        this.notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

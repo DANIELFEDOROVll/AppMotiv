@@ -20,6 +20,7 @@ import com.example.newappmotiv.model.recyclerView.MyAdapter
 import com.example.newappmotiv.model.recyclerView.One
 import com.example.newappmotiv.model.room.DayTask
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
+import com.example.newappmotiv.ui.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,8 +38,6 @@ class TasksFragment : Fragment() {
     private lateinit var viewModel: TasksViewModel
     private lateinit var adapter: MyAdapter
 
-    private lateinit var preferencesManager: PreferencesManager
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,18 +49,7 @@ class TasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repositoryDayTask = DayTasksRepository(database.getDaoTasks())
-        val repositoryGeneralTask = GeneralTasksRepository(database.getDaoGeneralTasks())
-
-        preferencesManager = PreferencesManager(requireContext())
-
-        viewModel = ViewModelProvider(requireActivity() as AddDayTasksActivity,
-            TasksViewModelFactory(
-                repositoryDayTask,
-                repositoryGeneralTask,
-                preferencesManager
-            )
-        )[TasksViewModel::class.java]
+        viewModel = (activity as MainActivity).getTasksViewModel()
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -83,7 +71,7 @@ class TasksFragment : Fragment() {
             }
         })
 
-        viewModel.toast_numer.observe(viewLifecycleOwner){
+        viewModel.toast_message.observe(viewLifecycleOwner){
             showToastReadyTask(it)
         }
 
@@ -92,21 +80,18 @@ class TasksFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadTasks()
+    }
+
     private fun toAddDayTaskActivity(){
         val intent = Intent(requireContext(), AddDayTasksActivity::class.java)
         startActivity(intent)
     }
 
-    private fun showToastReadyTask(num: Float){
-        val messages = listOf(
-            "Молодец! Вот твои баллы!",
-            "Хорош, держи свои заработаные баллы",
-            "Неплохо, давай в таком же темпе.",
-            "Потрудился - получил! Держи бро!"
-        )
-        Toast.makeText(requireContext(), messages[Random.nextInt(1,4)] + " + ${num} баллов!"
-            ,Toast.LENGTH_SHORT)
-            .show()
+    private fun showToastReadyTask(message: String){
+        Toast.makeText(requireContext(), message,Toast.LENGTH_SHORT).show()
     }
 
     private fun clickStart(t: DayTask){
@@ -116,7 +101,7 @@ class TasksFragment : Fragment() {
         val durationInMinutes = t.timeValue
         val durationInMillis = durationInMinutes * 60
 
-        // Создаем Intent для запуска системного таймера
+        // Intent для запуска системного таймера
         val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
             putExtra(AlarmClock.EXTRA_LENGTH, durationInMillis)
             putExtra(AlarmClock.EXTRA_MESSAGE, "Таймер для задачи: ${t.generalTaskName}")
@@ -127,19 +112,5 @@ class TasksFragment : Fragment() {
 
     companion object{
         const val MYLOG = "my_log_1"
-    }
-
-    class TasksViewModelFactory(
-        private val repository: DayTasksRepository,
-        private val repositoryGeneralTask: GeneralTasksRepository,
-        private val preferencesManager: PreferencesManager
-    ) : ViewModelProvider.Factory {
-        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return TasksViewModel(repository, repositoryGeneralTask, preferencesManager) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
     }
 }

@@ -2,18 +2,24 @@ package com.example.newappmotiv.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.newappmotiv.R
+import com.example.newappmotiv.model.DayTasksRepository
+import com.example.newappmotiv.model.GeneralTasksRepository
+import com.example.newappmotiv.model.sharedPreference.PreferencesManager
 import com.example.newappmotiv.ui.profile.ProfileFragment
 import com.example.newappmotiv.ui.store.StoreFragment
 import com.example.newappmotiv.ui.tasks.TasksFragment
+import com.example.newappmotiv.ui.tasks.TasksViewModel
+import com.example.newappmotiv.utils.MyApplication
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
-
-    private lateinit var tasksFragment: TasksFragment
-    private lateinit var storeFragment: StoreFragment
-    private lateinit var profileFragment: ProfileFragment
+    private lateinit var viewModel: TasksViewModel
+    private val database by lazy {
+        (application as MyApplication).database
+    }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -43,15 +49,32 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, TasksFragment())
             .commit()
+
+        val dayTasksRepository = DayTasksRepository(database.getDaoTasks())
+        val generalTasksRepository = GeneralTasksRepository(database.getDaoGeneralTasks())
+        val preferencesManager = PreferencesManager(this)
+        viewModel = ViewModelProvider(this,
+            TasksViewModelFactory(
+                dayTasksRepository,
+                generalTasksRepository,
+                preferencesManager
+            )
+        )[TasksViewModel::class.java]
     }
 
+    fun getTasksViewModel() = viewModel
 
-    companion object{
-        // ключи для sharedPreference
-        const val SHARED_PREF_ONE_KEY = "shered_pref_one"
-        const val BALANCE_NOW_KEY = "balance_now_key" //ключ текущего балланса
-        const val BALANCE_ALLTIME_KEY = "ballance_all_time_key" //балланс за все время
-        const val COSTS_ALLTIME_KEY = "costs_all_time_key" //потрачено за все время
+    class TasksViewModelFactory(
+        private val repository: DayTasksRepository,
+        private val repositoryGeneralTask: GeneralTasksRepository,
+        private val preferencesManager: PreferencesManager
+    ) : ViewModelProvider.Factory {
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return TasksViewModel(repository, repositoryGeneralTask, preferencesManager) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
-
 }

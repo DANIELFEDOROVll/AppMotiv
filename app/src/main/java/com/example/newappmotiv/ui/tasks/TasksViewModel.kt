@@ -8,9 +8,10 @@ import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.model.DayTasksRepository
 import com.example.newappmotiv.model.room.DayTask
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 class TasksViewModel(
     private val repositoryDayTask: DayTasksRepository,
@@ -21,8 +22,8 @@ class TasksViewModel(
     private val _tasks = MutableLiveData<List<DayTask>>()
     val tasks: LiveData<List<DayTask>> get() = _tasks
 
-    private val _toast_number = MutableLiveData<Float>()
-    val toast_numer: LiveData<Float> get() = _toast_number
+    private val _toast_message = MutableLiveData<String>()
+    val toast_message: LiveData<String> get() = _toast_message
 
     init {
         loadTasks()
@@ -35,14 +36,20 @@ class TasksViewModel(
         }
     }
 
+    fun clickStart(t: DayTask): Int{
+        viewModelScope.launch {
+            repositoryDayTask.updateTaskInProcess(t.id, true)
+        }
+        val durationInMinutes = t.timeValue
+        return  durationInMinutes * 60
+    }
+
     fun installBalance(t: DayTask){// меняет в сущности ready и считает баллы за задание
         viewModelScope.launch {
             repositoryDayTask.updateTaskReady(t.id, t.ready) //меняем ready в сущности
             if(t.ready){ // при выполнении задания
                 preferencesManager.updateNowBalanceForReadyTasks(t.price)
-                withContext(Dispatchers.Main){
-                    _toast_number.value = t.price
-                }
+                _toast_message.value = getMessageForToast(t.price)
             }
             if(!t.ready){ // при отмене задания
                 preferencesManager.updateNowBalanceForCancelTasks(t.price)
@@ -65,5 +72,15 @@ class TasksViewModel(
                 repositoryGeneralTask.updateTotalSpentTimeOfTheTask(name, spentTime - minutes)
             }
         }
+    }
+
+    private fun getMessageForToast(num: Float): String{
+        val messages = listOf(
+            "Молодец! Вот твои баллы!",
+            "Хорош, держи свои заработаные баллы",
+            "Неплохо, давай в таком же темпе.",
+            "Потрудился - получил! Держи бро!"
+        )
+        return messages[Random.nextInt(1,4)] + " + ${num} баллов!"
     }
 }

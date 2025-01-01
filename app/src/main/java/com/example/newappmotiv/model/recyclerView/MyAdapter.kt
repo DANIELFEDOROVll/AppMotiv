@@ -1,10 +1,6 @@
 package com.example.newappmotiv.model.recyclerView
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.os.CountDownTimer
-import android.provider.AlarmClock
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +31,7 @@ class MyAdapter(private var tasksForRecycler: List<DayTask>,
 
     fun updateTasks(tasks: List<DayTask>){
         tasksForRecycler = tasks
-        this.notifyDataSetChanged()
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

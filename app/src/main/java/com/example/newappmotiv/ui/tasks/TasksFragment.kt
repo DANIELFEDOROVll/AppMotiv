@@ -60,16 +60,15 @@ class TasksFragment : Fragment() {
                 // выполняется при нажатии "начать"
                 clickStart(t)
             },
-            { t -> //выполняется при нажатии на галочку
+            { t ->
+                //выполняется при нажатии на галочку
                 viewModel.installBalance(t)
             })
         recyclerView.adapter = adapter
 
-        viewModel.tasks.observe(viewLifecycleOwner, Observer { items ->
-            items?.let {
-                adapter.updateTasks(it)
-            }
-        })
+        viewModel.tasks.observe(viewLifecycleOwner){
+            adapter.updateTasks(it)
+        }
 
         viewModel.toast_message.observe(viewLifecycleOwner){
             showToastReadyTask(it)

@@ -22,12 +22,8 @@ class TasksViewModel(
     private val _tasks = MutableLiveData<List<DayTask>>()
     val tasks: LiveData<List<DayTask>> get() = _tasks
 
-    private val _toast_message = MutableLiveData<String>()
+    private val _toast_message = SingleLiveEvent<String>()
     val toast_message: LiveData<String> get() = _toast_message
-
-    init {
-        loadTasks()
-    }
 
     fun loadTasks(){
         viewModelScope.launch {
@@ -35,6 +31,7 @@ class TasksViewModel(
             _tasks.postValue(newTasks)
         }
     }
+
 
     fun clickStart(t: DayTask): Int{
         viewModelScope.launch {
@@ -49,13 +46,12 @@ class TasksViewModel(
             repositoryDayTask.updateTaskReady(t.id, t.ready) //меняем ready в сущности
             if(t.ready){ // при выполнении задания
                 preferencesManager.updateNowBalanceForReadyTasks(t.price)
-                _toast_message.value = getMessageForToast(t.price)
+                _toast_message.postValue(getMessageForToast(t.price))
             }
             if(!t.ready){ // при отмене задания
                 preferencesManager.updateNowBalanceForCancelTasks(t.price)
             }
             addMinutesInTotalSpentTime(t.generalTaskName, t.timeValue, t.ready)
-            loadTasks()
         }
     }
 

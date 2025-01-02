@@ -9,32 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.databinding.FragmentTasksBinding
-import com.example.newappmotiv.model.DayTasksRepository
 import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapter
-import com.example.newappmotiv.model.recyclerView.One
-import com.example.newappmotiv.model.room.DayTask
-import com.example.newappmotiv.model.sharedPreference.PreferencesManager
 import com.example.newappmotiv.ui.MainActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlin.random.Random
 
 
 class TasksFragment : Fragment() {
     private lateinit var binding: FragmentTasksBinding
-
-    val database by lazy {
-        (requireActivity().application as MyApplication).database
-    }
-
     private lateinit var viewModel: TasksViewModel
     private lateinit var adapter: MyAdapter
 
@@ -58,7 +41,7 @@ class TasksFragment : Fragment() {
             emptyList(),
             { t ->
                 // выполняется при нажатии "начать"
-                clickStart(t)
+                viewModel.clickStart(t)
             },
             { t ->
                 //выполняется при нажатии на галочку
@@ -72,6 +55,10 @@ class TasksFragment : Fragment() {
 
         viewModel.toast_message.observe(viewLifecycleOwner){
             showToastReadyTask(it)
+        }
+
+        viewModel.secondTimer.observe(viewLifecycleOwner){
+            startTimer(it)
         }
 
         binding.addButton.setOnClickListener {
@@ -93,17 +80,10 @@ class TasksFragment : Fragment() {
         Toast.makeText(requireContext(), message,Toast.LENGTH_SHORT).show()
     }
 
-    private fun clickStart(t: DayTask){
-        CoroutineScope(Dispatchers.IO).launch {
-            database.getDaoTasks().updateTaskInProcess(t.id, true)
-        }
-        val durationInMinutes = t.timeValue
-        val durationInMillis = durationInMinutes * 60
-
+    private fun startTimer(seconds: Int){
         // Intent для запуска системного таймера
         val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
-            putExtra(AlarmClock.EXTRA_LENGTH, durationInMillis)
-            putExtra(AlarmClock.EXTRA_MESSAGE, "Таймер для задачи: ${t.generalTaskName}")
+            putExtra(AlarmClock.EXTRA_LENGTH, seconds)
             putExtra(AlarmClock.EXTRA_SKIP_UI, true) // Пропустить UI
         }
         startActivity(intent)

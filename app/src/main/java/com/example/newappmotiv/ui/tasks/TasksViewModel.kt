@@ -8,8 +8,6 @@ import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.model.DayTasksRepository
 import com.example.newappmotiv.model.room.DayTask
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -25,6 +23,9 @@ class TasksViewModel(
     private val _toast_message = SingleLiveEvent<String>()
     val toast_message: LiveData<String> get() = _toast_message
 
+    private val _secondTimer = SingleLiveEvent<Int>()
+    val secondTimer: LiveData<Int> get() = _secondTimer
+
     fun loadTasks(){
         viewModelScope.launch {
             val newTasks = repositoryDayTask.getDayTasks()
@@ -32,13 +33,12 @@ class TasksViewModel(
         }
     }
 
-
-    fun clickStart(t: DayTask): Int{
+    fun clickStart(t: DayTask){
         viewModelScope.launch {
             repositoryDayTask.updateTaskInProcess(t.id, true)
         }
         val durationInMinutes = t.timeValue
-        return  durationInMinutes * 60
+        _secondTimer.value = durationInMinutes * 60
     }
 
     fun installBalance(t: DayTask){// меняет в сущности ready и считает баллы за задание

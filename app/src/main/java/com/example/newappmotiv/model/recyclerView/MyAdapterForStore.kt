@@ -10,10 +10,10 @@ import com.example.newappmotiv.R
 import com.example.newappmotiv.model.room.StoresItem
 
 
-class MyAdapterForStore(private val tasksForRecycler: List<StoresItem>,
-                private val onClickButtonBuy: (StoresItem) -> Boolean,
-                private val onClickButtonAct: (StoresItem) -> Unit,
-                private val onClickButtonCancel: (StoresItem) -> Unit) : RecyclerView.Adapter<MyAdapterForStore.ViewHolder>() {
+class MyAdapterForStore(private var itemsStore: List<StoresItem>,
+                        private val onClickButtonBuy: (StoresItem) -> Boolean,
+                        private val onClickButtonAct: (StoresItem) -> Unit,
+                        private val onClickButtonCancel: (StoresItem) -> Unit) : RecyclerView.Adapter<MyAdapterForStore.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_for_store, parent, false)
@@ -21,11 +21,16 @@ class MyAdapterForStore(private val tasksForRecycler: List<StoresItem>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(tasksForRecycler[position])
+        holder.bind(itemsStore[position])
     }
 
     override fun getItemCount(): Int {
-        return tasksForRecycler.size
+        return itemsStore.size
+    }
+
+    fun updateItems(items: List<StoresItem>){
+        itemsStore = items
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

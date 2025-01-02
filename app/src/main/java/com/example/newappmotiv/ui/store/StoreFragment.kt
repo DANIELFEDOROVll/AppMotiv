@@ -14,6 +14,8 @@ import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapterForStore
 import com.example.newappmotiv.model.room.StoresItem
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
+import com.example.newappmotiv.ui.MainActivity
+import com.example.newappmotiv.ui.tasks.TasksViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +28,8 @@ class StoreFragment : Fragment() {
     }
 
     private lateinit var preferencesManager: PreferencesManager
+    private lateinit var viewModel: StoreViewModel
+    private lateinit var tasksViewModel: TasksViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,27 +42,37 @@ class StoreFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         preferencesManager = PreferencesManager(requireContext())
 
+        viewModel = (activity as MainActivity).getStoreViewModel()
+        tasksViewModel = (activity as MainActivity).getTasksViewModel()
+
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val items = database.getDaoStore().getAllItems()
-            val adapter = MyAdapterForStore(items,
-                { item -> //при нажатии купить
-                    boughtItem(item)
+        val adapter = MyAdapterForStore(
+            emptyList(),
+            { item -> //при нажатии купить
+                boughtItem(item)
             }, { item -> // анопка активировать
-                    actionTimerForStoreItem(item)
-                    requestForChangeActivate(item)
+                actionTimerForStoreItem(item)
+                requestForChangeActivate(item)
             },{ item -> //при нажатии отмена
                 cancelItem(item)
-                })
-            recyclerView.adapter = adapter
+            })
+        recyclerView.adapter = adapter
+
+        viewModel.items.observe(viewLifecycleOwner){
+            adapter.updateItems(it)
         }
 
         binding.addButton.setOnClickListener {
             val intent = Intent(requireContext(), AddItemAtStoreActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadItems()
     }
 
     private fun boughtItem(item: StoresItem): Boolean{

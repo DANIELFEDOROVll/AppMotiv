@@ -31,12 +31,14 @@ class AddItemAtStoreActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 database.getDaoStore().insertItem(item)
             }
+            finish()
         }
 
         binding.button4.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 database.getDaoStore().deleteAllItems()
             }
+            finish()
         }
 
     }

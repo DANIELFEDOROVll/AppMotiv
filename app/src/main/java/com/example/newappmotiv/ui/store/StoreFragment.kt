@@ -29,7 +29,7 @@ class StoreFragment : Fragment() {
 
     private lateinit var preferencesManager: PreferencesManager
     private lateinit var viewModel: StoreViewModel
-    private lateinit var tasksViewModel: TasksViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,7 +43,6 @@ class StoreFragment : Fragment() {
         preferencesManager = PreferencesManager(requireContext())
 
         viewModel = (activity as MainActivity).getStoreViewModel()
-        tasksViewModel = (activity as MainActivity).getTasksViewModel()
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -51,17 +50,25 @@ class StoreFragment : Fragment() {
         val adapter = MyAdapterForStore(
             emptyList(),
             { item -> //при нажатии купить
-                boughtItem(item)
+                viewModel.boughtItem(item)
             }, { item -> // анопка активировать
-                actionTimerForStoreItem(item)
-                requestForChangeActivate(item)
+                viewModel.actionTimerForStoreItem(item)
+                viewModel.requestForChangeActivate(item.id)
             },{ item -> //при нажатии отмена
-                cancelItem(item)
+                viewModel.cancelItem(item)
             })
         recyclerView.adapter = adapter
 
         viewModel.items.observe(viewLifecycleOwner){
             adapter.updateItems(it)
+        }
+
+        viewModel.toastMessage.observe(viewLifecycleOwner){
+            getToast(it)
+        }
+
+        viewModel.secondTimer.observe(viewLifecycleOwner){
+            startTimer(it)
         }
 
         binding.addButton.setOnClickListener {
@@ -75,55 +82,15 @@ class StoreFragment : Fragment() {
         viewModel.loadItems()
     }
 
-    private fun boughtItem(item: StoresItem): Boolean{
-        val work = preferencesManager.updateNowBalanceForBuy(item.price)
-        if(!work) {
-            Toast.makeText(requireContext(), "Не хватает средств!", Toast.LENGTH_SHORT)
-                .show()
-            return false
-        }
-        else{
-            CoroutineScope(Dispatchers.IO).launch {
-                database.getDaoStore().updateTaskReadyById(item.id, item.bought)
-            }
-            showToastBuyOrCancelItem(item.price, true)
-            preferencesManager.updateSpentAllTime(item.price)
-            return true
-        }
-    }
-
-    private fun cancelItem(item: StoresItem){
-        CoroutineScope(Dispatchers.IO).launch {
-            database.getDaoStore().updateTaskReadyById(item.id, item.bought)
-        }
-        preferencesManager.updateNowBalanceForCancel(item.price)
-        showToastBuyOrCancelItem(item.price, false)
-    }
-
-    private fun showToastBuyOrCancelItem(num: Float, buy: Boolean){
-        var text: String
-        if(buy) text = "Потраченно на покупку ${num} баллов"
-        else text = "Покупка отменена, баллы возвращенны"
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT)
-            .show()
-    }
-
-    private fun actionTimerForStoreItem(item: StoresItem){
-        val durationInMinutes = item.timeValue
-        val durationInSecond = durationInMinutes * 60
-
-        // Создаем Intent для запуска системного таймера
+    private fun startTimer(seconds: Int){
         val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
-            putExtra(AlarmClock.EXTRA_LENGTH, durationInSecond)
-            putExtra(AlarmClock.EXTRA_MESSAGE, "Таймер для покупки: ${item.name}")
-            putExtra(AlarmClock.EXTRA_SKIP_UI, true) // Пропустить UI
+            putExtra(AlarmClock.EXTRA_LENGTH, seconds)
+            putExtra(AlarmClock.EXTRA_SKIP_UI, true)
         }
         requireContext().startActivity(intent)
     }
 
-    fun requestForChangeActivate(item: StoresItem){
-        CoroutineScope(Dispatchers.IO).launch {
-            database.getDaoStore().updateIsAlreadyActive(item.id, true)
-        }
+    private fun getToast(message: String){
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

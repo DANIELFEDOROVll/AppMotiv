@@ -3,6 +3,7 @@ package com.example.newappmotiv.ui.tasks
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.model.DayTasksRepository
@@ -78,5 +79,19 @@ class TasksViewModel(
             "Потрудился - получил! Держи бро!"
         )
         return messages[Random.nextInt(1,4)] + " + ${num} баллов!"
+    }
+
+    class TasksViewModelFactory(
+        private val repository: DayTasksRepository,
+        private val repositoryGeneralTask: GeneralTasksRepository,
+        private val preferencesManager: PreferencesManager
+    ) : ViewModelProvider.Factory {
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return TasksViewModel(repository, repositoryGeneralTask, preferencesManager) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }

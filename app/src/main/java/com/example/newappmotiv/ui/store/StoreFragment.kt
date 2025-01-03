@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.FragmentStoreBinding
+import com.example.newappmotiv.model.StoreRepository
 import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapterForStore
 import com.example.newappmotiv.model.room.StoresItem
@@ -23,11 +25,6 @@ import kotlinx.coroutines.launch
 
 class StoreFragment : Fragment() {
     private lateinit var binding: FragmentStoreBinding
-    private val database by lazy {
-        (requireActivity().application as MyApplication).database
-    }
-
-    private lateinit var preferencesManager: PreferencesManager
     private lateinit var viewModel: StoreViewModel
 
     override fun onCreateView(
@@ -40,36 +37,19 @@ class StoreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        preferencesManager = PreferencesManager(requireContext())
 
-        viewModel = (activity as MainActivity).getStoreViewModel()
+        val preferencesManager = PreferencesManager(requireContext())
+        val storeRepository = StoreRepository((requireActivity().application as MyApplication)
+            .database.getDaoStore())
 
-        val recyclerView = binding.recyclerView
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        viewModel = ViewModelProvider(this,
+            StoreViewModel.StoreViewModelFactory(
+                storeRepository,
+                preferencesManager
+            ))[StoreViewModel::class.java]
 
-        val adapter = MyAdapterForStore(
-            emptyList(),
-            { item -> //при нажатии купить
-                viewModel.boughtItem(item)
-            }, { item -> // анопка активировать
-                viewModel.actionTimerForStoreItem(item)
-                viewModel.requestForChangeActivate(item.id)
-            },{ item -> //при нажатии отмена
-                viewModel.cancelItem(item)
-            })
-        recyclerView.adapter = adapter
-
-        viewModel.items.observe(viewLifecycleOwner){
-            adapter.updateItems(it)
-        }
-
-        viewModel.toastMessage.observe(viewLifecycleOwner){
-            getToast(it)
-        }
-
-        viewModel.secondTimer.observe(viewLifecycleOwner){
-            startTimer(it)
-        }
+        setupRecyclerView()
+        observeViewModel()
 
         binding.addButton.setOnClickListener {
             val intent = Intent(requireContext(), AddItemAtStoreActivity::class.java)
@@ -80,6 +60,36 @@ class StoreFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.loadItems()
+    }
+
+    private fun setupRecyclerView(){
+        val recyclerView = binding.recyclerView
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val adapter = MyAdapterForStore(
+            emptyList(),
+            { item -> // при нажатии купить
+                viewModel.boughtItem(item)
+            }, { item -> // кнопка активировать
+                viewModel.actionTimerForStoreItem(item)
+                viewModel.requestForChangeActivate(item.id)
+            },{ item -> // при нажатии отмена
+                viewModel.cancelItem(item)
+            })
+        recyclerView.adapter = adapter
+        viewModel.items.observe(viewLifecycleOwner){
+            adapter.updateItems(it)
+        }
+    }
+
+    private fun observeViewModel(){
+        viewModel.toastMessage.observe(viewLifecycleOwner){
+            getToast(it)
+        }
+
+        viewModel.secondTimer.observe(viewLifecycleOwner){
+            startTimer(it)
+        }
     }
 
     private fun startTimer(seconds: Int){

@@ -19,7 +19,6 @@ import com.example.newappmotiv.ui.MainActivity
 class TasksFragment : Fragment() {
     private lateinit var binding: FragmentTasksBinding
     private lateinit var viewModel: TasksViewModel
-    private lateinit var adapter: MyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +33,24 @@ class TasksFragment : Fragment() {
 
         viewModel = (activity as MainActivity).getTasksViewModel()
 
+        setupRecyclerView()
+        observeViewModel()
+
+        binding.addButton.setOnClickListener {
+            toAddDayTaskActivity()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadTasks()
+    }
+
+    private fun setupRecyclerView(){
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        adapter = MyAdapter(
+        val adapter = MyAdapter(
             emptyList(),
             { t ->
                 // выполняется при нажатии "начать"
@@ -52,7 +65,9 @@ class TasksFragment : Fragment() {
         viewModel.tasks.observe(viewLifecycleOwner){
             adapter.updateTasks(it)
         }
+    }
 
+    private fun observeViewModel(){
         viewModel.toast_message.observe(viewLifecycleOwner){
             showToastReadyTask(it)
         }
@@ -60,15 +75,6 @@ class TasksFragment : Fragment() {
         viewModel.secondTimer.observe(viewLifecycleOwner){
             startTimer(it)
         }
-
-        binding.addButton.setOnClickListener {
-            toAddDayTaskActivity()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadTasks()
     }
 
     private fun toAddDayTaskActivity(){

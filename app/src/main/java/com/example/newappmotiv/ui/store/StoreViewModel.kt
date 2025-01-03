@@ -5,6 +5,7 @@ import android.provider.AlarmClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.newappmotiv.model.StoreRepository
 import com.example.newappmotiv.model.room.StoresItem
@@ -81,6 +82,19 @@ class StoreViewModel(
     fun insertItem(item: StoresItem){
         viewModelScope.launch {
             storeRepository.insertItem(item)
+        }
+    }
+
+    class StoreViewModelFactory(
+        private val storeRepository: StoreRepository,
+        private val preferencesManager: PreferencesManager
+    ) : ViewModelProvider.Factory {
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(StoreViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return StoreViewModel(storeRepository, preferencesManager) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }

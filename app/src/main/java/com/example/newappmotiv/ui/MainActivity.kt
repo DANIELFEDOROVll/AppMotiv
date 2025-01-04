@@ -16,10 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var viewModel: TasksViewModel
-    private val database by lazy {
-        (application as MyApplication).database
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,24 +41,10 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-        // Инициализация фрагмента задач по умолчанию
+        // Инициализация TasksFragment по умолчанию
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, TasksFragment())
             .commit()
 
-        val dayTasksRepository = DayTasksRepository(database.getDaoTasks())
-        val generalTasksRepository = GeneralTasksRepository(database.getDaoGeneralTasks())
-        val preferencesManager = PreferencesManager(this)
-
-        viewModel = ViewModelProvider(this,
-            TasksViewModel.TasksViewModelFactory(
-                dayTasksRepository,
-                generalTasksRepository,
-                preferencesManager
-            )
-        )[TasksViewModel::class.java]
     }
-
-    fun getTasksViewModel() = viewModel
 }

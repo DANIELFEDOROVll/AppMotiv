@@ -53,6 +53,7 @@ class TasksViewModel(
                 preferencesManager.updateNowBalanceForCancelTasks(t.price)
             }
             addMinutesInTotalSpentTime(t.generalTaskName, t.timeValue, t.ready)
+            loadTasks()
         }
     }
 

@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.newappmotiv.databinding.ActivityAddItemAtStoreBinding
 import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.room.StoresItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 class AddItemAtStoreActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddItemAtStoreBinding
@@ -22,8 +20,8 @@ class AddItemAtStoreActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this,
-            AddItemViewModel.AddItemViewModelFactory(database.getDaoStore()
-            ))[AddItemViewModel::class.java]
+            AddItemViewModel.Factory(database.getDaoStore())
+        )[AddItemViewModel::class.java]
 
         binding.button.setOnClickListener {
             addItem()

@@ -6,15 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.newappmotiv.R
 import com.example.newappmotiv.databinding.FragmentProfileBinding
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
 
 
 class ProfileFragment : Fragment() {
-    lateinit var binding: FragmentProfileBinding
+    private lateinit var binding: FragmentProfileBinding
+    private lateinit var preferencesManager: PreferencesManager
+    private lateinit var viewModel: ProfileViewModel
 
-    lateinit var preferencesManager: PreferencesManager
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,7 +29,13 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         preferencesManager = PreferencesManager(requireContext())
 
-        binding.balanceTextView.text = "Текущий балланс: ${preferencesManager.getNowBalance()}"
+        viewModel = ViewModelProvider(this,
+            ProfileViewModel.ProfileViewModelFactory(
+                preferencesManager
+            )
+        )[ProfileViewModel::class.java]
+
+        observeBalance()
 
         binding.button1.setOnClickListener{
             toAddGeneralTaskActivity()
@@ -38,6 +46,11 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getNowBalance()
+    }
+
     private fun toAddGeneralTaskActivity(){
         val intent = Intent(requireContext(), AddGeneralTaskActivity::class.java)
         startActivity(intent)
@@ -46,5 +59,12 @@ class ProfileFragment : Fragment() {
     private fun toAllStatsActivity(){
         val intent = Intent(requireContext(), AllStatsActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun observeBalance(){
+        viewModel.nowBalance.observe(viewLifecycleOwner){
+            val text = "Балланс: $it"
+            binding.balanceTextView.text = text
+        }
     }
 }

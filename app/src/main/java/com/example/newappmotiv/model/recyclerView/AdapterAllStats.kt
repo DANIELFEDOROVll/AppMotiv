@@ -9,7 +9,7 @@ import com.example.newappmotiv.R
 import com.example.newappmotiv.model.room.GeneralTasks
 
 
-class AdapterAllStats(private val generalTasks: List<GeneralTasks>) : RecyclerView.Adapter<AdapterAllStats.ViewHolder>() {
+class AdapterAllStats(private var generalTasks: List<GeneralTasks>) : RecyclerView.Adapter<AdapterAllStats.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_all_stats, parent, false)
@@ -22,6 +22,11 @@ class AdapterAllStats(private val generalTasks: List<GeneralTasks>) : RecyclerVi
 
     override fun getItemCount(): Int {
         return generalTasks.size
+    }
+
+    fun updateTasks(newTasks: List<GeneralTasks>){
+        generalTasks = newTasks
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

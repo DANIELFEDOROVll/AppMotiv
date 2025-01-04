@@ -1,2 +1,2 @@
 Небольшое приложение(список дел) на котлин по патерну MVVM. 
-Используется Room, RecyclerView и т.д.
+Используются Coroutines, Room, RecyclerView и т.д.

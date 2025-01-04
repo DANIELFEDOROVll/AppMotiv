@@ -2,16 +2,13 @@ package com.example.newappmotiv.ui.profile
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.ActivityAllStatsBinding
 import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.model.recyclerView.AdapterAllStats
 import com.example.newappmotiv.utils.MyApplication
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 class AllStatsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAllStatsBinding

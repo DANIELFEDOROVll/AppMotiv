@@ -2,16 +2,10 @@ package com.example.newappmotiv.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.newappmotiv.R
-import com.example.newappmotiv.model.DayTasksRepository
-import com.example.newappmotiv.model.GeneralTasksRepository
-import com.example.newappmotiv.model.sharedPreference.PreferencesManager
 import com.example.newappmotiv.ui.profile.ProfileFragment
 import com.example.newappmotiv.ui.store.StoreFragment
 import com.example.newappmotiv.ui.tasks.TasksFragment
-import com.example.newappmotiv.ui.tasks.TasksViewModel
-import com.example.newappmotiv.utils.MyApplication
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {

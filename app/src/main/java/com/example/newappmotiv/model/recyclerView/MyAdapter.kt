@@ -49,6 +49,12 @@ class MyAdapter(private var tasksForRecycler: List<DayTask>,
             name.isChecked = task.ready
             timeValue.text = task.timeValue.toString() + " мин."
 
+            if (task.ready){
+                task.inProcess = false
+                textInProcess.visibility = View.GONE
+                startButton.visibility = View.GONE
+            }
+
             if(task.inProcess){
                 textInProcess.visibility = View.VISIBLE
                 startButton.visibility = View.GONE

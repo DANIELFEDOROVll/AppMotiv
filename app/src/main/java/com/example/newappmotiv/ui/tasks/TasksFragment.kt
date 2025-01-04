@@ -17,7 +17,6 @@ import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapter
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
-import com.example.newappmotiv.ui.MainActivity
 
 
 class TasksFragment : Fragment() {
@@ -46,8 +45,7 @@ class TasksFragment : Fragment() {
             TasksViewModel.TasksViewModelFactory(
                 dayTasksRepository,
                 generalTasksRepository,
-                preferencesManager
-            )
+                preferencesManager)
         )[TasksViewModel::class.java]
 
         setupRecyclerView()

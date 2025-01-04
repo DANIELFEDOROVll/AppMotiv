@@ -5,10 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.newappmotiv.model.DayTasksRepository
-import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
-import com.example.newappmotiv.ui.tasks.TasksViewModel
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val preferencesManager: PreferencesManager): ViewModel() {

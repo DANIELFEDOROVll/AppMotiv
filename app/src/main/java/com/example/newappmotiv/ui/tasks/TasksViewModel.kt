@@ -9,10 +9,13 @@ import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.model.DayTasksRepository
 import com.example.newappmotiv.model.room.DayTask
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.random.Random
 
-class TasksViewModel(
+@HiltViewModel
+class TasksViewModel @Inject constructor(
     private val repositoryDayTask: DayTasksRepository,
     private val repositoryGeneralTask: GeneralTasksRepository,
     private val preferencesManager: PreferencesManager

@@ -37,7 +37,7 @@ class AdapterForAddDayTasks(private val generalTasks: List<GeneralTasks>): Recyc
         val edCount = itemView.findViewById<EditText>(R.id.editTextCount)
 
         fun bind(generalTask: GeneralTasks) {
-            checkbox.setOnCheckedChangeListener{_, isChecked ->
+            checkbox.setOnCheckedChangeListener{_, _ ->
                 val price = edPrice.text.toString()
                 val time = edTime.text.toString()
                 val count = edCount.text.toString()

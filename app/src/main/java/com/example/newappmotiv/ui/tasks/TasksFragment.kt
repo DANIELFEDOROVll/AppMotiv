@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.FragmentTasksBinding
@@ -16,15 +17,20 @@ import com.example.newappmotiv.model.DayTasksRepository
 import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapter
+import com.example.newappmotiv.model.recyclerView.One
+import com.example.newappmotiv.model.recyclerView.TaskForRecycler
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class TasksFragment : Fragment() {
     private lateinit var binding: FragmentTasksBinding
-    private lateinit var viewModel: TasksViewModel
+    //private lateinit var viewModel: TasksViewModel
     private val database by lazy {
         (requireActivity().application as MyApplication).database
     }
+    val viewModel: TasksViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +42,7 @@ class TasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        /*
         val dayTasksRepository = DayTasksRepository(database.getDaoTasks())
         val generalTasksRepository = GeneralTasksRepository(database.getDaoGeneralTasks())
         val preferencesManager = PreferencesManager(requireContext())
@@ -47,7 +53,7 @@ class TasksFragment : Fragment() {
                 generalTasksRepository,
                 preferencesManager)
         )[TasksViewModel::class.java]
-
+        */
         setupRecyclerView()
         observeViewModel()
 
@@ -59,6 +65,7 @@ class TasksFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.loadTasks()
+        One.listOfTasks.clear()
     }
 
     private fun setupRecyclerView(){

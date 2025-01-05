@@ -2,8 +2,9 @@ package com.example.newappmotiv.model.sharedPreference
 
 import android.content.Context
 import android.content.SharedPreferences
+import javax.inject.Inject
 
-class PreferencesManager(context: Context) {
+class PreferencesManager @Inject constructor(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(SHARED_PREF_NAME_KEY, Context.MODE_PRIVATE)
 

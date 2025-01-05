@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.devtools.ksp")
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -40,35 +41,40 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.fragment.ktx)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
-    implementation("com.google.android.material:material:1.12.0")
+    implementation(libs.material)
 
-    val room_version = "2.6.1"
 
-    implementation("androidx.room:room-runtime:$room_version")
+    //room:
+    implementation(libs.androidx.room.runtime)
 
-    ksp("androidx.room:room-compiler:$room_version")
+    ksp(libs.androidx.room.compiler)
 
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
+    implementation(libs.androidx.room.ktx)
 
     // optional - RxJava2 support for Room
-    implementation("androidx.room:room-rxjava2:$room_version")
+    implementation(libs.androidx.room.rxjava2)
 
     // optional - RxJava3 support for Room
-    implementation("androidx.room:room-rxjava3:$room_version")
+    implementation(libs.androidx.room.rxjava3)
 
     // optional - Guava support for Room, including Optional and ListenableFuture
-    implementation("androidx.room:room-guava:$room_version")
+    implementation(libs.androidx.room.guava)
 
     // optional - Test helpers
-    testImplementation("androidx.room:room-testing:$room_version")
+    testImplementation(libs.androidx.room.testing)
 
     // optional - Paging 3 Integration
-    implementation("androidx.room:room-paging:$room_version")
+    implementation(libs.androidx.room.paging)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

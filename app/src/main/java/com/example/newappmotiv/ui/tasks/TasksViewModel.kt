@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
-@HiltViewModel
-class TasksViewModel @Inject constructor(
+//@HiltViewModel
+class TasksViewModel(
     private val repositoryDayTask: DayTasksRepository,
     private val repositoryGeneralTask: GeneralTasksRepository,
     private val preferencesManager: PreferencesManager

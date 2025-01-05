@@ -4,7 +4,7 @@ import android.app.Application
 import com.example.newappmotiv.model.room.AppDatabase
 import dagger.hilt.android.HiltAndroidApp
 
-@HiltAndroidApp
+//@HiltAndroidApp
 class MyApplication: Application() {
     lateinit var database: AppDatabase
 

@@ -7,6 +7,9 @@ import com.example.newappmotiv.ui.profile.ProfileFragment
 import com.example.newappmotiv.ui.store.StoreFragment
 import com.example.newappmotiv.ui.tasks.TasksFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -21,15 +24,18 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_tasks -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, TasksFragment()).commit()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, TasksFragment()).commit()
                     true
                 }
                 R.id.menu_shop -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, StoreFragment()).commit()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, StoreFragment()).commit()
                     true
                 }
                 R.id.menu_profile -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, ProfileFragment()).commit()
                     true
                 }
                 else -> false

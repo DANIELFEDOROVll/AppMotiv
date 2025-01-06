@@ -17,6 +17,4 @@ interface DaoGeneralTask {
 
     @Query("UPDATE generalTasks SET totalSpentTimeInMinutes = :newValue WHERE name = :taskName")
     suspend fun updateTotalSpentMinutes(taskName: String, newValue: Int)
-
-
 }

@@ -30,7 +30,7 @@ class TasksFragment : Fragment() {
     private val database by lazy {
         (requireActivity().application as MyApplication).database
     }
-    // viewModel: TasksViewModel by viewModels()
+    //val viewModel: TasksViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

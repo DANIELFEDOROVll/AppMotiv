@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.newappmotiv.R
 import com.example.newappmotiv.databinding.FragmentProfileBinding
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
+import dagger.hilt.android.AndroidEntryPoint
+
 
 
 class ProfileFragment : Fragment() {

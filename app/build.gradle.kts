@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp") version "1.9.10-1.0.13"
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -41,10 +40,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.fragment.ktx)
-
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    implementation("io.insert-koin:koin-android:3.2.2")
+    implementation("io.insert-koin:koin-androidx-navigation:3.2.2")
+    implementation("io.insert-koin:koin-test-junit4:3.2.2")
 
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

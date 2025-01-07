@@ -9,9 +9,7 @@ import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.model.DayTasksRepository
 import com.example.newappmotiv.model.room.DayTask
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.random.Random
 
 

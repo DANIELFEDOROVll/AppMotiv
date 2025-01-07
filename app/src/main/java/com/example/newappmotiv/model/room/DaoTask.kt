@@ -6,7 +6,6 @@ import androidx.room.Query
 
 
 @Dao
-
 interface DaoTask {
     @Insert
     suspend fun insertDayTask(dayTask: DayTask)

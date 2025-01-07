@@ -14,15 +14,7 @@ import com.example.newappmotiv.databinding.FragmentStoreBinding
 import com.example.newappmotiv.model.StoreRepository
 import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapterForStore
-import com.example.newappmotiv.model.room.StoresItem
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
-import com.example.newappmotiv.ui.MainActivity
-import com.example.newappmotiv.ui.tasks.TasksViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
 
 
 class StoreFragment : Fragment() {

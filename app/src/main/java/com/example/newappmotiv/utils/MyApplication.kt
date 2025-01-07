@@ -1,8 +1,10 @@
 package com.example.newappmotiv.utils
 
 import android.app.Application
+import com.example.newappmotiv.DI.appModuleTasksViewModel
 import com.example.newappmotiv.model.room.AppDatabase
-import dagger.hilt.android.HiltAndroidApp
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 
 class MyApplication: Application() {
@@ -10,5 +12,9 @@ class MyApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         database = AppDatabase.getDatabase(this)
+        startKoin {
+            androidContext(this@MyApplication)
+            modules(appModuleTasksViewModel)
+        }
     }
 }

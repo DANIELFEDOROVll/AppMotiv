@@ -7,10 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.example.newappmotiv.R
 import com.example.newappmotiv.databinding.FragmentProfileBinding
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
-import dagger.hilt.android.AndroidEntryPoint
 
 
 

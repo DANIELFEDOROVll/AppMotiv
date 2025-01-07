@@ -7,8 +7,6 @@ import com.example.newappmotiv.ui.profile.ProfileFragment
 import com.example.newappmotiv.ui.store.StoreFragment
 import com.example.newappmotiv.ui.tasks.TasksFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {

@@ -23,11 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TasksFragment : Fragment() {
     private lateinit var binding: FragmentTasksBinding
-    //private lateinit var viewModel: TasksViewModel
-    private val database by lazy {
-        (requireActivity().application as MyApplication).database
-    }
-    val viewModel: TasksViewModel by viewModel()
+    private val viewModel: TasksViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

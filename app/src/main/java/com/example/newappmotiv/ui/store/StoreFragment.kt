@@ -8,18 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.FragmentStoreBinding
-import com.example.newappmotiv.model.StoreRepository
-import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapterForStore
-import com.example.newappmotiv.model.sharedPreference.PreferencesManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class StoreFragment : Fragment() {
     private lateinit var binding: FragmentStoreBinding
-    private lateinit var viewModel: StoreViewModel
+    private val viewModel by viewModel<StoreViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,16 +28,6 @@ class StoreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val preferencesManager = PreferencesManager(requireContext())
-        val storeRepository = StoreRepository((requireActivity().application as MyApplication)
-            .database.getDaoStore())
-
-        viewModel = ViewModelProvider(this,
-            StoreViewModel.StoreViewModelFactory(
-                storeRepository,
-                preferencesManager
-            ))[StoreViewModel::class.java]
 
         setupRecyclerView()
         observeViewModel()

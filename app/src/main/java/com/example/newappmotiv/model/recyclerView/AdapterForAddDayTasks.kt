@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newappmotiv.R
 import com.example.newappmotiv.model.room.DayTask
 import com.example.newappmotiv.model.room.GeneralTasks
-import com.example.newappmotiv.ui.tasks.TasksViewModel
 
 
-class AdapterForAddDayTasks(private val generalTasks: List<GeneralTasks>): RecyclerView.Adapter<AdapterForAddDayTasks.ViewHolder>() {
+class AdapterForAddDayTasks(private var generalTasks: List<GeneralTasks>): RecyclerView.Adapter<AdapterForAddDayTasks.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_general_task, parent, false)
@@ -27,6 +26,11 @@ class AdapterForAddDayTasks(private val generalTasks: List<GeneralTasks>): Recyc
 
     override fun getItemCount(): Int {
         return generalTasks.size
+    }
+
+    fun updateTasks(newTasks: List<GeneralTasks>){
+        generalTasks = newTasks
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

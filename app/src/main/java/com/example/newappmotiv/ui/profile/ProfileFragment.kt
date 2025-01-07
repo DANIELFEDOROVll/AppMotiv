@@ -6,16 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.example.newappmotiv.databinding.FragmentProfileBinding
-import com.example.newappmotiv.model.sharedPreference.PreferencesManager
-
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var preferencesManager: PreferencesManager
-    private lateinit var viewModel: ProfileViewModel
+    private val viewModel by viewModel<ProfileViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,13 +24,6 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        preferencesManager = PreferencesManager(requireContext())
-
-        viewModel = ViewModelProvider(this,
-            ProfileViewModel.ProfileViewModelFactory(
-                preferencesManager
-            )
-        )[ProfileViewModel::class.java]
 
         observeBalance()
 

@@ -18,16 +18,4 @@ class AllStatsViewModel(private val repository: GeneralTasksRepository): ViewMod
             _tasks.value = repository.getGeneralTasks()
         }
     }
-
-    class AllStatsViewModelFactory(
-        private val repository: GeneralTasksRepository
-    ) : ViewModelProvider.Factory {
-        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(AllStatsViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return AllStatsViewModel(repository) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }
 }

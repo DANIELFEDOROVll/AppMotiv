@@ -1,6 +1,8 @@
 package com.example.newappmotiv.utils
 
 import android.app.Application
+import com.example.newappmotiv.DI.appModuleProfile
+import com.example.newappmotiv.DI.appModuleStore
 import com.example.newappmotiv.DI.appModuleTasksViewModel
 import com.example.newappmotiv.model.room.AppDatabase
 import org.koin.android.ext.koin.androidContext
@@ -14,7 +16,11 @@ class MyApplication: Application() {
         database = AppDatabase.getDatabase(this)
         startKoin {
             androidContext(this@MyApplication)
-            modules(appModuleTasksViewModel)
+            modules(
+                appModuleTasksViewModel,
+                appModuleStore,
+                appModuleProfile
+            )
         }
     }
 }

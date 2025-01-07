@@ -1,0 +1,1 @@
+Андроид приложение с MVVM. Используются: Koin, Coroutines, Room, RecyclerView и т.д.

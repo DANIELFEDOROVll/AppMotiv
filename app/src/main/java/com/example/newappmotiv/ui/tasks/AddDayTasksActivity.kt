@@ -4,50 +4,45 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.ActivityAddDayTasksBinding
-import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.AdapterForAddDayTasks
-import com.example.newappmotiv.model.recyclerView.One
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddDayTasksActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddDayTasksBinding
-    private val database by lazy {
-        (application as MyApplication).database
-    }
+    private val viewModel by viewModel<AddDayTaskViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddDayTasksBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val recyclerView = binding.recViewAddDaytask
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val tasks = database.getDaoGeneralTasks().getGeneralTasks()
-
-            withContext(Dispatchers.Main) {
-                val adapter = AdapterForAddDayTasks(tasks)
-                recyclerView.adapter = adapter
-            }
-        }
+        setupRecyclerView()
 
         binding.buttonAddDaytask.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                database.getDaoTasks().insertListDayTasks(One.listOfTasks.toList())
-            }
+            viewModel.addDayTasks()
             finish()
         }
 
         binding.buttonDeleteAllTasks.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                database.getDaoTasks().deleteAllTasks()
-            }
+            viewModel.deleteDayTasks()
             finish()
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadTasks()
+    }
+
+    private fun setupRecyclerView(){
+        val recyclerView = binding.recViewAddDaytask
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val adapter = AdapterForAddDayTasks(emptyList())
+        recyclerView.adapter = adapter
+
+        viewModel.tasks.observe(this){
+            adapter.updateTasks(it)
+        }
+    }
 }

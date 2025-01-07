@@ -1,19 +1,15 @@
 package com.example.newappmotiv.ui.store
 
-import android.content.Intent
-import android.provider.AlarmClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.newappmotiv.model.StoreRepository
 import com.example.newappmotiv.model.room.StoresItem
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
 import com.example.newappmotiv.ui.tasks.SingleLiveEvent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 class StoreViewModel(
     private val storeRepository: StoreRepository,
@@ -82,19 +78,6 @@ class StoreViewModel(
     fun insertItem(item: StoresItem){
         viewModelScope.launch {
             storeRepository.insertItem(item)
-        }
-    }
-
-    class StoreViewModelFactory(
-        private val storeRepository: StoreRepository,
-        private val preferencesManager: PreferencesManager
-    ) : ViewModelProvider.Factory {
-        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(StoreViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return StoreViewModel(storeRepository, preferencesManager) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }

@@ -4,6 +4,7 @@ import com.example.newappmotiv.model.DayTasksRepository
 import com.example.newappmotiv.model.GeneralTasksRepository
 import com.example.newappmotiv.model.room.AppDatabase
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
+import com.example.newappmotiv.ui.tasks.AddDayTaskViewModel
 import com.example.newappmotiv.ui.tasks.TasksViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -21,4 +22,7 @@ val appModuleTasksViewModel = module {
         repositoryGeneralTask = get(),
         preferencesManager = get()
     ) }
+    viewModel {
+        AddDayTaskViewModel(get(), get())
+    }
 }

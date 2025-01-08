@@ -81,6 +81,6 @@ class PreferencesManager (context: Context) {
         const val BALANCE_NOW_KEY = "balance_now_key" //ключ текущего балланса
         const val BALANCE_ALLTIME_KEY = "ballance_all_time_key" //балланс за все время
         const val SPENT_ALLTIME_KEY = "costs_all_time_key" //потрачено за все время
-        private val IS_FIRST_RUN_KEY = "is_first_run"
+        const val IS_FIRST_RUN_KEY = "is_first_run"
     }
 }

@@ -10,6 +10,6 @@ val appModuleProfile = module {
         ProfileViewModel(get())
     }
     viewModel{
-        AllStatsViewModel(get())
+        AllStatsViewModel(get(), get())
     }
 }

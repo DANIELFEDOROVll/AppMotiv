@@ -1,4 +1,4 @@
-package com.example.newappmotiv.model
+package com.example.newappmotiv.model.repositories
 
 import com.example.newappmotiv.model.room.DaoStore
 import com.example.newappmotiv.model.room.StoresItem

@@ -8,7 +8,7 @@ import com.example.newappmotiv.model.recyclerView.AdapterForAddDayTasks
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddDayTasksActivity : AppCompatActivity() {
-    lateinit var binding: ActivityAddDayTasksBinding
+    private lateinit var binding: ActivityAddDayTasksBinding
     private val viewModel by viewModel<AddDayTaskViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

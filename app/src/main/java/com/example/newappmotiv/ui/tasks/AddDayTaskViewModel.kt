@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newappmotiv.model.DayTasksRepository
-import com.example.newappmotiv.model.GeneralTasksRepository
+import com.example.newappmotiv.model.repositories.DayTasksRepository
+import com.example.newappmotiv.model.repositories.GeneralTasksRepository
 import com.example.newappmotiv.model.recyclerView.One
 import com.example.newappmotiv.model.room.GeneralTasks
 import kotlinx.coroutines.launch

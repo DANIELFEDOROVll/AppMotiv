@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newappmotiv.model.StoreRepository
+import com.example.newappmotiv.model.repositories.StoreRepository
 import com.example.newappmotiv.model.room.StoresItem
 import com.example.newappmotiv.model.sharedPreference.PreferencesManager
 import com.example.newappmotiv.ui.tasks.SingleLiveEvent
@@ -25,7 +25,7 @@ class StoreViewModel(
     private val _secondTimer = SingleLiveEvent<Int>()
     val secondTimer: LiveData<Int> get() = _secondTimer
 
-    // functions for StoreFragment
+
     fun loadItems(){
         viewModelScope.launch {
             _items.value = storeRepository.getAll()
@@ -49,9 +49,8 @@ class StoreViewModel(
     }
 
     private fun getTextBuyOrCancelItem(num: Float, buy: Boolean): String{
-        var text: String
-        if(buy) text = "Потраченно на покупку ${num} баллов"
-        else text = "Покупка отменена, баллы возвращенны"
+        val text: String = if(buy) "Потраченно на покупку ${num} баллов"
+        else "Покупка отменена, баллы возвращенны"
         return text
     }
 
@@ -71,13 +70,6 @@ class StoreViewModel(
     fun requestForChangeActivate(itemId: Int?){
         viewModelScope.launch {
             storeRepository.updateIsAlreadyActive(itemId, true)
-        }
-    }
-
-    //functions for addItemStoreActivity
-    fun insertItem(item: StoresItem){
-        viewModelScope.launch {
-            storeRepository.insertItem(item)
         }
     }
 }

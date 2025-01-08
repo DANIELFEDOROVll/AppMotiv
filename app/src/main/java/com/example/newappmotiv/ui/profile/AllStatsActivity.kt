@@ -18,13 +18,13 @@ class AllStatsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setRecycler()
-
-        binding.tvSpentTimeAllTasks.text = "Проведенное время за задачами(часов): "
+        observeViewModel()
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.loadTasks()
+        viewModel.getSpentAllTime()
     }
 
     private fun setRecycler(){
@@ -36,6 +36,13 @@ class AllStatsActivity : AppCompatActivity() {
 
         viewModel.tasks.observe(this){
             adapter.updateTasks(it)
+        }
+    }
+
+    private fun observeViewModel(){
+        viewModel.spentAllTime.observe(this){ hours ->
+            val text = "Проведенное время за всеми задачами(часов): $hours"
+            binding.tvSpentTimeAllTasks.text = text
         }
     }
 }

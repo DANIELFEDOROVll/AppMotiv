@@ -40,9 +40,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         // Инициализация TasksFragment по умолчанию
+        initFrag()
+    }
+
+    private fun initFrag(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, TasksFragment())
             .commit()
-
     }
 }

@@ -43,7 +43,6 @@ class MyAdapter(private var tasksForRecycler: List<DayTask>,
 
 
         fun bind(task: DayTask) {
-
             name.text = task.generalTaskName
             price.text = task.price.toString()
             name.isChecked = task.ready

@@ -9,15 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newappmotiv.databinding.FragmentTasksBinding
-import com.example.newappmotiv.model.DayTasksRepository
-import com.example.newappmotiv.model.GeneralTasksRepository
-import com.example.newappmotiv.utils.MyApplication
 import com.example.newappmotiv.model.recyclerView.MyAdapter
 import com.example.newappmotiv.model.recyclerView.One
-import com.example.newappmotiv.model.sharedPreference.PreferencesManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -97,9 +92,5 @@ class TasksFragment : Fragment() {
             putExtra(AlarmClock.EXTRA_SKIP_UI, true) // Пропустить UI
         }
         startActivity(intent)
-    }
-
-    companion object{
-        const val MYLOG = "my_log_1"
     }
 }

@@ -24,7 +24,9 @@ class AllStatsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.loadTasks()
-        viewModel.getSpentAllTime()
+        viewModel.getSpentAllTimeHours()
+        viewModel.getSpentAllTimeMoney()
+        viewModel.getGotAllTimeMoney()
     }
 
     private fun setRecycler(){
@@ -43,6 +45,16 @@ class AllStatsActivity : AppCompatActivity() {
         viewModel.spentAllTime.observe(this){ hours ->
             val text = "Проведенное время за всеми задачами(часов): $hours"
             binding.tvSpentTimeAllTasks.text = text
+        }
+
+        viewModel.spentMoneyAllTime.observe(this){
+            val text = "Потраченно баллов за все время: $it"
+            binding.textViewSpentMoney.text = text
+        }
+
+        viewModel.gotAllTime.observe(this){
+            val text = "Полученно баллов за все время: $it"
+            binding.textViewGotAllTime.text = text
         }
     }
 }

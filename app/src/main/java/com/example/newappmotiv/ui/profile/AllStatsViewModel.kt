@@ -17,13 +17,27 @@ class AllStatsViewModel(private val repository: GeneralTasksRepository,
     private val _spentAllTime = MutableLiveData<Float>()
     val spentAllTime: LiveData<Float> get() = _spentAllTime
 
+    private val _spentMoneyAllTime = MutableLiveData<Float>()
+    val spentMoneyAllTime: LiveData<Float> get() = _spentMoneyAllTime
+
+    private val _gotAllTime = MutableLiveData<Float>()
+    val gotAllTime: LiveData<Float> get() = _gotAllTime
+
     fun loadTasks(){
         viewModelScope.launch {
             _tasks.value = repository.getGeneralTasks()
         }
     }
 
-    fun getSpentAllTime(){
+    fun getSpentAllTimeHours(){
         _spentAllTime.value = preferencesManager.getSpentAllTime()
+    }
+
+    fun getSpentAllTimeMoney(){
+        _spentMoneyAllTime.value = preferencesManager.getSpentAllTime()
+    }
+
+    fun getGotAllTimeMoney(){
+        _gotAllTime.value = preferencesManager.getAllTimeBalance()
     }
 }

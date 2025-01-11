@@ -53,6 +53,7 @@ dependencies {
 
     //room:
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.animation.graphics.android)
 
     ksp(libs.androidx.room.compiler)
 

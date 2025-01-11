@@ -2,6 +2,7 @@ package com.example.newappmotiv.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newappmotiv.R
 import com.example.newappmotiv.ui.profile.ProfileFragment
 import com.example.newappmotiv.ui.store.StoreFragment

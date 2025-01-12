@@ -94,42 +94,4 @@ class TasksFragment : Fragment() {
         }
         startActivity(intent)
     }
-
-    /*private fun animateCups(cupCount: Int) {
-        for (i in 1..cupCount) {
-            val animatedCup = TextView(requireContext()).apply {
-                text = "$i" // Текущее значение кубка
-                textSize = 20f
-                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            }
-
-            // Добавляем TextView в родительский layout
-            (view?.findViewById<ConstraintLayout>(R.id.recyclerView))?.addView(animatedCup)
-
-            // Устанавливаем начальные координаты для анимации
-            animatedCup.x = cupTextView.x + cupTextView.width / 2 - animatedCup.width / 2
-            animatedCup.y = cupTextView.y + cupTextView.height / 2 - animatedCup.height / 2
-
-            // Конечные координаты (позиция кнопки)
-            val targetX = bottomNavigationView.x + bottomNavigationView.width / 2 - animatedCup.width / 2
-            val targetY = bottomNavigationView.y - animatedCup.height
-
-            // Анимация перемещения по X
-            ObjectAnimator.ofFloat(animatedCup, "translationX", targetX - animatedCup.x).apply {
-                duration = 500 // Длительность анимации в миллисекундах
-                start() // Запуск анимации
-            }
-
-            // Анимация перемещения по Y
-            ObjectAnimator.ofFloat(animatedCup, "translationY", targetY - animatedCup.y).apply {
-                duration = 500 // Длительность анимации в миллисекундах
-                start() // Запуск анимации
-            }
-
-            // Удаляем TextView после завершения анимации через 500 мс
-            animatedCup.postDelayed({
-                (findViewById<RelativeLayout>(R.id.rootLayout)).removeView(animatedCup)
-            }, 500)
-        }
-    } */
 }

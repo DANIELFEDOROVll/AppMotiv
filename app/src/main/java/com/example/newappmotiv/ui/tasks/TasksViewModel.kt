@@ -49,11 +49,10 @@ class TasksViewModel(
                 preferencesManager.updateNowBalanceForReadyTasks(t.price)
                 _toast_message.postValue(getMessageForToast(t.price))
             }
-            if(!t.ready){ // при отмене задания
+            else{ // при отмене задания
                 preferencesManager.updateNowBalanceForCancelTasks(t.price)
             }
             addMinutesInTotalSpentTime(t.generalTaskName, t.timeValue, t.ready)
-            loadTasks()
         }
     }
 
